@@ -1,0 +1,345 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="mapper.myMapper">
+
+<!-- comment query -->
+<select id="selectComment" resultType="model.Comment_post" >
+select c.*, u.nickname nickname from Comment_post c,user_info u 
+where 
+comment_no=#{comment_no} and
+u.user_id=c.user_id
+</select>
+
+
+<delete id="deleteCommentOne">
+delete from comment_post where comment_no=#{comment_no}
+</delete>
+
+<delete id="deleteCommentAll">
+delete from comment_post where post_no=#{post_no}
+</delete>
+
+<select id="selectMaxCommentNo" resultType="Integer"> 
+select max(comment_no) from comment_post
+</select>
+
+<select id="selectCommentList" resultType="model.Comment_post">
+select c.*,u.nickname nickname
+from comment_post c, user_info u
+where c.post_no=#{post_no}
+and u.user_id=c.user_id
+order by comment_parent asc,comment_no asc
+</select>
+
+<insert id="insertComment">
+insert into comment_post values(
+#{comment_no},
+#{post_no},
+#{user_id},
+#{comment_date},
+#{comment_parent},
+<if test="comment_content==null">
+null
+</if>
+<if test="comment_content!=null">
+#{comment_content}
+</if>
+,
+<if test="emo_id==null">
+null
+</if>
+<if test="emo_id!=null">
+#{emo_id}
+</if>
+)
+</insert>
+
+<!-- post query -->
+<delete id="deletePost">
+delete from post
+where 
+post_no=#{post_no}
+
+</delete>
+<update id="updatePost">
+update post set
+ title=#{title},
+ content=#{content}
+ <if test="post_views!=null">
+ ,post_views=#{post_views}
+ </if>
+ where post_no=#{post_no}
+</update>
+<select id="selectPostDetail" resultType="model.Post">
+select p.*,b.board_grade board_grade, b.board_name board_name,b.board_id board_id,u.nickname nickname from post p,board b,user_info u
+where p.post_no=#{post_no}
+and p.board_id=b.board_id and u.user_id=p.user_id
+</select>
+
+<select id="selectboardCnt" parameterType="model.Condition" resultType="Integer">
+select count(*) from post 
+<if test="board_id!=null">
+	where board_id=#{board_id}
+</if>
+</select>
+
+
+<!-- order by groupLayer desc , group_ord asc -->
+<select id="selectPostList" resultType="model.Post" parameterType="model.Condition">
+select * from(
+	select 
+		a.*, rownum rn
+	from(
+		select p.*, b.board_name board_name, u.nickname nickname
+		from post p,board b,user_info u
+		where p.board_id = b.board_id and p.user_id = u.user_id
+		<if test="board_id!=null">
+		and p.board_id=#{board_id}
+		</if>
+		order by post_no desc
+		) a 
+	)
+where rn between #{startRow} and #{endRow}
+</select>
+
+<!-- <select id="selectPostListAll" resultType="model.Post">
+select * from(select a.*, b.board_name board_name, u.nickname nickname, rownum rn from
+(select * from post where board_id!=0
+order by post_no desc
+) a, board b,user_info u
+where a.board_id = b.board_id and a.user_id = u.user_id) where rn between #{startRow} and #{endRow} 
+</select> -->
+
+
+
+<select id="selectMaxGruopLayer" resultType="Integer">
+select max(GROUPLAYER) from post
+</select>
+
+
+<select id="selectMaxPostNo" resultType="Integer">
+select max(post_no) from post
+</select>
+
+<update id="updateGroupReply">
+update post set  GROUP_ORD =  GROUP_ORD + 1
+where  GROUPLAYER = #{GROUPLAYER} and order_no >= #{GROUP_ORD}
+</update>
+
+<insert id="insertPost" >
+insert into post values(
+#{post_no},
+#{user_id},
+#{title},
+#{content},
+#{post_date},
+#{origin_no},
+#{group_ord},
+#{groupLayer},
+#{board_id},
+#{post_views}
+)
+</insert>
+
+<!-- manage query -->
+
+<select id="selectMaxloca" resultType="Integer">
+select max(board_location) from board
+</select>
+<select id="selectBoard" resultType="model.Board">
+select * from board where board_id=#{board_id}
+</select>
+
+<select id="selectMaxId" resultType="Integer">
+select max(board_id) from board
+</select>
+<select id="selectBoardListByGrade" resultType="model.Board">
+select * from Board
+where board_grade=#{board_grade}
+</select>
+<select id="selectBoardList" resultType="model.Board">
+select * from Board
+where board_grade not in 4 order by board_location
+</select> 
+<select id="selectLoca" resultType="model.Board">
+select * from Board
+where board_location=#{board_location}
+</select>
+<insert id="insertBoard">
+insert into board values(#{board_id},#{board_name},#{board_grade},#{board_location})
+</insert>
+<update id="oneBoardLocaUpdate">
+update board set board_location=#{board_location},
+board_grade=#{board_grade},
+board_name=#{board_name}
+ where board_id=#{board_id}
+
+</update>
+
+<update id="deleteBoard">
+update board set board_grade=4,
+board_name='삭제된 게시판',
+board_location=null
+where board_id=#{board_id}
+</update>
+<!-- sale query -->
+<delete id="deleteHaveEmo">
+delete from have_emoticon where
+user_id=#{user_id} and
+emo_id=#{emo_id}
+
+</delete>
+<select id="selectOrdCode" resultType="String">
+select emo_order_code from 
+	(select * from emoticon_sale where 
+	user_id=#{user_id} and
+	emo_id=#{emo_id}
+	order by emo_order_code desc)
+	where rownum=1
+</select>
+
+<insert id="buyEmoticon">
+insert into emoticon_sale values(
+#{emo_order_code},
+#{user_id},
+#{price},
+#{order_date},
+#{emo_id}
+)
+</insert>
+<insert id="refundEmoticon">
+insert into refund_emoticon values(
+#{emo_order_code},
+#{refund_date}
+)
+</insert>
+
+<select id="getSaleId" resultType="String">
+	select emo_order_code from 
+	(select * from emoticon_sale order by emo_order_code desc)
+	where rownum=1
+</select>
+
+<!-- emoticon_info query -->
+<insert id="insertHaveEmo">
+insert into have_emoticon values(
+#{user_id},
+#{emo_id}
+)
+
+
+</insert>
+
+
+<select id="selectEmoCart" resultType="model.Emo_cart">
+select * from emo_cart where user_id=#{user_id}
+</select>
+<select id="selectEmoCount" resultType="Integer">
+select count(*) from emoticon_info
+
+</select>
+<select id="selectEmoticonList" resultType="model.Emoticon_info">
+select * from
+	(select e.*, rownum rn from
+		(select * from emoticon_info
+		<if test="have_emoticon != null">
+		where emo_id not in
+        <foreach collection="have_emoticon" item="emo"  open="(" close=")" separator=",">
+            #{emo.emo_id}
+        </foreach>
+        </if>
+		 order by emo_id desc) e
+	)
+where rn between #{startRow} and #{endRow}
+</select>
+
+<insert id="inCart">
+insert into emo_cart values(#{user_id},#{emo_id})
+</insert>
+<delete id="outCart">
+delete from emo_cart where user_id=#{user_id} and  emo_id=#{emo_id}
+</delete>
+<select id="selectHaveEmoticon" resultType="model.Have_emoticon">
+select * from have_emoticon where user_id=#{user_id}
+</select>
+<select id="selectEmoticon" resultType="model.Emoticon_info">
+select * from emoticon_info where emo_id=#{emo_id} 
+</select>
+<select id="selectHaveEmoInfo" resultType="model.Have_emo_info">
+select
+h.user_id as user_id,
+h.emo_id as emo_id,
+e.emo_name as emo_name,
+e.emo_info as emo_info,
+e.emo_price emo_price,
+e.emo_picture emo_picture
+from emoticon_info e, have_emoticon h
+where h.emo_id = e.emo_id and h.user_id=#{user_id} 
+</select>
+
+<select id="selectCartEmoInfo" resultType="model.Have_emo_info">
+select
+h.user_id as user_id,
+h.emo_id as emo_id,
+e.emo_name as emo_name,
+e.emo_info as emo_info,
+e.emo_price emo_price,
+e.emo_picture emo_picture
+from emoticon_info e, emo_cart h
+where h.emo_id = e.emo_id and h.user_id=#{user_id} 
+</select>
+
+
+
+
+<!-- user_info query -->
+<update id="updateUser">
+update user_info set
+user_name = #{user_name},
+password=#{password},
+birthday=#{birthday},
+email=#{email},
+gender=#{gender},
+nickname=#{nickname}
+WHERE 
+user_id = #{user_id}
+</update>
+
+<update id="updateUserStat">
+update user_info set
+user_stat= #{user_stat}
+WHERE 
+user_id = #{user_id}
+</update>
+
+<select id="selectUserIdByNameAndEmail" resultType="String">
+select user_id from user_info where user_name=#{user_name} and email=#{email}
+</select>
+<select id="selectUserPassword" resultType="String">
+select password 
+	from user_info
+	where
+		user_name=#{user_name} 
+		and email=#{email} 
+		and user_id=#{user_id}
+</select>
+
+
+<select id="selectUserById" resultType="model.User_info">
+select * from user_info where user_id=#{user_id}
+</select>
+<insert id="insertUser" parameterType="model.User_info">
+insert into user_info values(
+#{user_id},
+#{password},
+#{email},
+#{user_name},
+#{gender},
+#{nickname},
+#{birthday},
+#{user_stat}
+)
+</insert>
+<!-- user_info query -->
+</mapper>

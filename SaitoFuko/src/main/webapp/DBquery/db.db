@@ -1,0 +1,148 @@
+//user_info
+create table user_info(
+user_id varchar2(30) PRIMARY KEY,
+password varchar2(30),
+email varchar2(50),
+user_name varchar2(15),
+gender varchar2(10),
+nickname varchar2(30),
+birthday varchar2(20),
+user_stat varchar2(10)
+)
+
+
+//emoticon_info
+create table emoticon_info(
+emo_id varchar2(10) primary key,
+emo_name varchar2(20),
+emo_info varchar2(1000),
+emo_price number(10),
+emo_picture varchar2(100)
+)
+
+//have_emoticon
+create table have_emoticon(
+user_id varchar2(30) REFERENCES user_info (user_id),
+emo_id varchar2(10) REFERENCES emoticon_info (emo_id)
+)
+
+//emo_cart
+create table emo_cart(
+user_id varchar2(30) REFERENCES user_info (user_id),
+emo_id varchar2(10) REFERENCES emoticon_info (emo_id)
+)
+
+//emoticon_sale
+create table emoticon_sale(
+emo_order_code varchar2(10) primary key,
+user_id varchar2(30) REFERENCES user_info (user_id),
+price number(10),
+order_date varchar2(20),
+emo_id varchar2(10) REFERENCES emoticon_info (emo_id)
+)
+
+//refund_emoticon
+create table refund_emoticon(
+emo_order_code varchar2(10) REFERENCES emoticon_sale (emo_order_code),
+refund_date varchar2(20)
+)
+//board
+create table board(
+board_id number(10) primary key,
+board_name varchar2(20),
+board_grade number(2),
+board_location number(2) UNIQUE
+)
+
+
+//post
+create table post(
+post_no number(10) primary key,
+user_id varchar2(30) REFERENCES user_info (user_id),
+title varchar2(30),
+content long,
+post_date varchar2(20),
+origin_no number(10),
+group_ord number(10),
+groupLayer number(10),
+board_id number(10)  REFERENCES board (board_id),
+post_views number(10)
+)
+
+create table comment_post(
+comment_no number(10) primary key,
+post_no number(10) REFERENCES post (post_no),
+user_id varchar2(30) REFERENCES user_info (user_id),
+comment_date varchar2(20),
+comment_parent number(10),
+comment_content varchar2(1000),
+emo_id varchar2(10) REFERENCES emoticon_info (emo_id)
+)
+
+
+
+
+
+//insert emoticon
+insert into emoticon_info values ('EM0001','GirlsFrontLine','카구팔 하트',1700,'frontLine1.jpg');
+insert into emoticon_info values ('EM0002','GirlsFrontLine','톰슨',300,'frontLine2.jpg');
+insert into emoticon_info values ('EM0003','GirlsFrontLine','콜라',500,'frontLine3.jpg');
+insert into emoticon_info values ('EM0004','GirlsFrontLine','IDW No',1900,'frontLine4.jpg');
+insert into emoticon_info values ('EM0005','GirlsFrontLine','솦',1200,'frontLine5.jpg');
+insert into emoticon_info values ('EM0006','GirlsFrontLine','초코',1800,'frontLine6.jpg');
+insert into emoticon_info values ('EM0007','GirlsFrontLine','IDW 나비탕',300,'frontLine7.jpg');
+insert into emoticon_info values ('EM0008','GirlsFrontLine','장군님',800,'frontLine8.jpg');
+insert into emoticon_info values ('EM0009','GirlsFrontLine','첫째 돼지',1700,'frontLine9.jpg');
+insert into emoticon_info values ('EM0010','GirlsFrontLine','우리형',400,'frontLine10.jpg');
+insert into emoticon_info values ('EM0011','GirlsFrontLine','M4A1',500,'frontLine11.jpg');
+insert into emoticon_info values ('EM0012','GirlsFrontLine','춘전이',600,'frontLine12.jpg');
+insert into emoticon_info values ('EM0013','GirlsFrontLine','흥국이 1단계',600,'frontLine13.jpg');
+insert into emoticon_info values ('EM0014','GirlsFrontLine','흥국이 2단계',1800,'frontLine14.jpg');
+insert into emoticon_info values ('EM0015','GirlsFrontLine','흥국이 웃음',500,'frontLine15.jpg');
+insert into emoticon_info values ('EM0016','GirlsFrontLine','확성기',1900,'frontLine16.jpg');
+insert into emoticon_info values ('EM0017','GirlsFrontLine','잠탱이',600,'frontLine17.jpg');
+insert into emoticon_info values ('EM0018','GirlsFrontLine','족재비',400,'frontLine18.jpg');
+insert into emoticon_info values ('EM0019','GirlsFrontLine','스타',600,'frontLine19.jpg');
+insert into emoticon_info values ('EM0020','GirlsFrontLine','돈주세요 시키칸 엔',400,'frontLine20.jpg');
+insert into emoticon_info values ('EM0021','GirlsFrontLine','돈주세요 시키칸 달라',1300,'frontLine21.jpg');
+insert into emoticon_info values ('EM0022','GirlsFrontLine','보석 카리나',1000,'frontLine22.jpg');
+insert into emoticon_info values ('EM0023','GirlsFrontLine','화난 와짱',1300,'frontLine23.jpg');
+insert into emoticon_info values ('EM0024','GirlsFrontLine','움프자매',1200,'frontLine24.jpg');
+insert into emoticon_info values ('EM0025','GirlsFrontLine','M4A1 수박',400,'frontLine25.jpg');
+insert into emoticon_info values ('EM0026','GirlsFrontLine','돈줍는 카리나',1400,'frontLine26.jpg');
+insert into emoticon_info values ('EM0027','GirlsFrontLine','스타 2',1800,'frontLine27.jpg');
+
+
+insert into emoticon_info values ('EM0028','PrincessConnet','NO!',1800,'puricone1.png');
+insert into emoticon_info values ('EM0029','PrincessConnet','간다!',1500,'puricone2.png');
+insert into emoticon_info values ('EM0030','PrincessConnet','갑니다~',600,'puricone3.png');
+insert into emoticon_info values ('EM0031','PrincessConnet','거기다!',1500,'puricone4.png');
+insert into emoticon_info values ('EM0032','PrincessConnet','고마워요',300,'puricone5.png');
+insert into emoticon_info values ('EM0033','PrincessConnet','곤란  하네요',1700,'puricone6.png');
+insert into emoticon_info values ('EM0034','PrincessConnet','굿 잡',1900,'puricone7.png');
+insert into emoticon_info values ('EM0035','PrincessConnet','냥~',700,'puricone8.png');
+insert into emoticon_info values ('EM0036','PrincessConnet','두고보자구!',1000,'puricone9.png');
+insert into emoticon_info values ('EM0037','PrincessConnet','뒤는 맡길게요...',1700,'puricone10.png');
+insert into emoticon_info values ('EM0038','PrincessConnet','라져!',900,'puricone11.png');
+insert into emoticon_info values ('EM0039','PrincessConnet','맡겨줘!',600,'puricone12.png');
+insert into emoticon_info values ('EM0040','PrincessConnet','미안해',1400,'puricone13.png');
+insert into emoticon_info values ('EM0041','PrincessConnet','부들 부들',1300,'puricone14.png');
+insert into emoticon_info values ('EM0042','PrincessConnet','뿡 뿡',1600,'puricone15.png');
+insert into emoticon_info values ('EM0043','PrincessConnet','수고 했어!',1700,'puricone16.png');
+insert into emoticon_info values ('EM0044','PrincessConnet','신고 했습니다!!',300,'puricone17.png');
+insert into emoticon_info values ('EM0045','PrincessConnet','안녕하..안녕',1900,'puricone18.png');
+insert into emoticon_info values ('EM0046','PrincessConnet','안뇽~',1200,'puricone19.png');
+insert into emoticon_info values ('EM0047','PrincessConnet','어떻게든 될거야~',1300,'puricone20.png');
+insert into emoticon_info values ('EM0048','PrincessConnet','오케이~',900,'puricone21.png');
+insert into emoticon_info values ('EM0049','PrincessConnet','우후후...',1900,'puricone22.png');
+insert into emoticon_info values ('EM0050','PrincessConnet','으앗!으앗!',1000,'puricone23.png');
+insert into emoticon_info values ('EM0051','PrincessConnet','이몸을 따르라!',1100,'puricone24.png');
+insert into emoticon_info values ('EM0052','PrincessConnet','잘자요..',1100,'puricone25.png');
+insert into emoticon_info values ('EM0053','PrincessConnet','잠깐 기다려!!',1500,'puricone26.png');
+insert into emoticon_info values ('EM0054','PrincessConnet','좋아요',1900,'puricone27.png');
+insert into emoticon_info values ('EM0055','PrincessConnet','좋은 아침~!!',600,'puricone28.png');
+insert into emoticon_info values ('EM0056','PrincessConnet','참전',400,'puricone29.png');
+insert into emoticon_info values ('EM0057','PrincessConnet','하왓',600,'puricone30.png');
+insert into emoticon_info values ('EM0058','PrincessConnet','회복해줘!!',1400,'puricone31.png');
+insert into emoticon_info values ('EM0059','PrincessConnet','힘내라!',1400,'puricone32.png');
+
