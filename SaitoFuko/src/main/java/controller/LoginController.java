@@ -29,6 +29,14 @@ public class LoginController {
 		return mav;
 	}
 	
+	@RequestMapping(value="/login/mobileLogin.html")
+	public ModelAndView loginForm() {
+		ModelAndView mav = new ModelAndView("home/mobileLoginForm");
+		mav.addObject(new User_info());
+		return mav;
+	}
+	
+	
 	@RequestMapping(value="/login/login.html")
 	public ModelAndView login(User_info user_info,HttpSession session) {
 		ModelAndView mav = new ModelAndView("home/loginResult");

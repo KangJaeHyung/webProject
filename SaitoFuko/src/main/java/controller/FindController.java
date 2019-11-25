@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.List;
 
 import javax.mail.internet.MimeMessage;
+import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.FileSystemResource;
@@ -16,6 +17,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import logic.UserCatalog;
 import model.User_info;
+import util.Define;
 
 @Controller
 public class FindController {
@@ -26,8 +28,19 @@ public class FindController {
 	private JavaMailSenderImpl mailSender;
 
 	@RequestMapping(value = "/find/findIdForm.html")
-	public ModelAndView findIdForm() {
-		ModelAndView mav = new ModelAndView("home/main");
+	public ModelAndView findIdForm(HttpServletRequest request) {
+		String userAgent= (String)request.getHeader("User-Agent");
+		 ModelAndView mav= new ModelAndView("home/main");
+		 String[] mobileos= Define.mobileos;
+	     int j = -1;
+	     if(userAgent != null && !userAgent.equals("")){
+	          for(int i = 0 ; i<mobileos.length ; i++){
+	               j = userAgent.indexOf(mobileos[i]);
+	               if(j>  -1){
+	            	   mav.setViewName("home/mobile");
+	               }
+	          }
+	     }
 		mav.addObject("BODY", "findId.jsp");
 		mav.addObject(new User_info());
 		return mav;
@@ -35,8 +48,19 @@ public class FindController {
 	}
 
 	@RequestMapping(value = "/find/findPasswordForm.html")
-	public ModelAndView findIdPassword() {
-		ModelAndView mav = new ModelAndView("home/main");
+	public ModelAndView findIdPassword(HttpServletRequest request) {
+		String userAgent= (String)request.getHeader("User-Agent");
+		 ModelAndView mav= new ModelAndView("home/main");
+		 String[] mobileos= Define.mobileos;
+	     int j = -1;
+	     if(userAgent != null && !userAgent.equals("")){
+	          for(int i = 0 ; i<mobileos.length ; i++){
+	               j = userAgent.indexOf(mobileos[i]);
+	               if(j>  -1){
+	            	   mav.setViewName("home/mobile");
+	               }
+	          }
+	     }
 		mav.addObject("BODY", "findPassword.jsp");
 		mav.addObject(new User_info());
 		return mav;
@@ -44,8 +68,19 @@ public class FindController {
 	}
 
 	@RequestMapping(value = "/find/findId.html")
-	public ModelAndView findId(User_info user_info) {
-		ModelAndView mav = new ModelAndView("home/main");
+	public ModelAndView findId(User_info user_info,HttpServletRequest request) {
+		String userAgent= (String)request.getHeader("User-Agent");
+		 ModelAndView mav= new ModelAndView("home/main");
+		 String[] mobileos= Define.mobileos;
+	     int j = -1;
+	     if(userAgent != null && !userAgent.equals("")){
+	          for(int i = 0 ; i<mobileos.length ; i++){
+	               j = userAgent.indexOf(mobileos[i]);
+	               if(j>  -1){
+	            	   mav.setViewName("home/mobile");
+	               }
+	          }
+	     }
 		List<String> userList = userCatalog.selectUserIdByNameAndEmail(user_info);
 		if (userList.isEmpty()) {
 			mav.addObject("result", "noUser");
@@ -61,8 +96,19 @@ public class FindController {
 	}
 
 	@RequestMapping(value = "/find/findPassword.html")
-	public ModelAndView findPassword(final User_info user_info) {
-		ModelAndView mav = new ModelAndView("home/main");
+	public ModelAndView findPassword(final User_info user_info,HttpServletRequest request) {
+		String userAgent= (String)request.getHeader("User-Agent");
+		 ModelAndView mav= new ModelAndView("home/main");
+		 String[] mobileos= Define.mobileos;
+	     int j = -1;
+	     if(userAgent != null && !userAgent.equals("")){
+	          for(int i = 0 ; i<mobileos.length ; i++){
+	               j = userAgent.indexOf(mobileos[i]);
+	               if(j>  -1){
+	            	   mav.setViewName("home/mobile");
+	               }
+	          }
+	     }
 		final String password = userCatalog.selectUserPassword(user_info);
 		if(password!=null) {
 			final MimeMessagePreparator preparator = new MimeMessagePreparator() {

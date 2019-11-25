@@ -25,6 +25,7 @@ import model.Comment_post;
 import model.Condition;
 import model.Post;
 import model.User_info;
+import util.Define;
 
 @Controller
 public class PostController {
@@ -43,11 +44,24 @@ public class PostController {
 		return mav;
 	}
 	@RequestMapping(value = "/post/updatePostForm.html")
-	public ModelAndView updatePostForm(Integer post_no) {
-		ModelAndView mav = new ModelAndView("home/main");
+	public ModelAndView updatePostForm(Integer post_no,HttpServletRequest request) {
+		String userAgent= (String)request.getHeader("User-Agent");
+		 ModelAndView mav= new ModelAndView("home/main");
+		 String[] mobileos= Define.mobileos;
+	     int j = -1;
+	     if(userAgent != null && !userAgent.equals("")){
+	          for(int i = 0 ; i<mobileos.length ; i++){
+	               j = userAgent.indexOf(mobileos[i]);
+	               if(j>  -1){
+	            	   mav.setViewName("home/mobile");
+	               }
+	          }
+	     }
 		Post post = postCatalog.selectPostDetail(post_no);
+		List<Board> boardList = boardDao.selectBoardList();
 		post.setContent(post.getContent().replaceAll("<img style='max-width:100%; height:auto;'","<img"));
 		mav.addObject(post);
+		mav.addObject("boardList",boardList);
 		mav.addObject("BODY","postUpdateForm.jsp");
 		return mav;
 	}
@@ -69,8 +83,19 @@ public class PostController {
 	
 	
 	@RequestMapping(value = "/post/postRead.html")
-	public ModelAndView postRead(Integer post_no, HttpSession session) {
-		ModelAndView mav = new ModelAndView("home/main");
+	public ModelAndView postRead(Integer post_no, HttpSession session,HttpServletRequest request) {
+		String userAgent= (String)request.getHeader("User-Agent");
+		 ModelAndView mav= new ModelAndView("home/main");
+		 String[] mobileos= Define.mobileos;
+	     int j = -1;
+	     if(userAgent != null && !userAgent.equals("")){
+	          for(int i = 0 ; i<mobileos.length ; i++){
+	               j = userAgent.indexOf(mobileos[i]);
+	               if(j>  -1){
+	            	   mav.setViewName("home/mobile");
+	               }
+	          }
+	     }
 		User_info loginUser = (User_info) session.getAttribute("loginUser");
 		Post post = postCatalog.selectPostDetail(post_no);
 		if (post.getBoard_grade() == 1) {
@@ -104,8 +129,19 @@ public class PostController {
 	}
 
 	@RequestMapping(value = "/post/postList.html")
-	public ModelAndView postList(Integer pageNum, Integer board_id) {
-		ModelAndView mav = new ModelAndView("home/main");
+	public ModelAndView postList(Integer pageNum, Integer board_id,HttpServletRequest request) {
+		String userAgent= (String)request.getHeader("User-Agent");
+		 ModelAndView mav= new ModelAndView("home/main");
+		 String[] mobileos= Define.mobileos;
+	     int j = -1;
+	     if(userAgent != null && !userAgent.equals("")){
+	          for(int i = 0 ; i<mobileos.length ; i++){
+	               j = userAgent.indexOf(mobileos[i]);
+	               if(j>  -1){
+	            	   mav.setViewName("home/mobile");
+	               }
+	          }
+	     }
 		Condition c = new Condition();
 		c.setBoard_id(board_id);
 		Integer cnt = postCatalog.selectboardCnt(board_id);
@@ -226,8 +262,19 @@ public class PostController {
 	}
 
 	@RequestMapping(value = "/post/PostForm.html")
-	public ModelAndView postForm(HttpSession session,Integer board_id) {
-		ModelAndView mav = new ModelAndView("home/main");
+	public ModelAndView postForm(HttpSession session,Integer board_id,HttpServletRequest request) {
+		String userAgent= (String)request.getHeader("User-Agent");
+		 ModelAndView mav= new ModelAndView("home/main");
+		 String[] mobileos= Define.mobileos;
+	     int j = -1;
+	     if(userAgent != null && !userAgent.equals("")){
+	          for(int i = 0 ; i<mobileos.length ; i++){
+	               j = userAgent.indexOf(mobileos[i]);
+	               if(j>  -1){
+	            	   mav.setViewName("home/mobile");
+	               }
+	          }
+	     }
 		User_info loginUser = (User_info) session.getAttribute("loginUser");
 		if (loginUser == null) {
 			mav.setViewName("home/noLogin");

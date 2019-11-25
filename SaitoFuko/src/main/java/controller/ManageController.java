@@ -2,6 +2,7 @@ package controller;
 
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +13,7 @@ import org.springframework.web.servlet.ModelAndView;
 import logic.ManageCatalog;
 import model.Board;
 import model.User_info;
+import util.Define;
 
 @Controller
 public class ManageController {
@@ -39,8 +41,19 @@ public class ManageController {
 	}
 	
 	@RequestMapping(value="/manage/BoardManage.html")
-	public ModelAndView BoardPage(HttpSession session) {
-		ModelAndView mav= new ModelAndView("home/main");
+	public ModelAndView BoardPage(HttpSession session,HttpServletRequest request) {
+		String userAgent= (String)request.getHeader("User-Agent");
+		 ModelAndView mav= new ModelAndView("home/main");
+		 String[] mobileos= Define.mobileos;
+	     int j = -1;
+	     if(userAgent != null && !userAgent.equals("")){
+	          for(int i = 0 ; i<mobileos.length ; i++){
+	               j = userAgent.indexOf(mobileos[i]);
+	               if(j>  -1){
+	            	   mav.setViewName("home/mobile");
+	               }
+	          }
+	     }
 		User_info loginUser= (User_info)session.getAttribute("loginUser");
 		if(loginUser!=null) {
 			if(!loginUser.getUser_stat().equals("M")) {
@@ -56,8 +69,19 @@ public class ManageController {
 		return mav;	
 	}
 	@RequestMapping(value="/manage/addBoard.html")
-	public ModelAndView addBoard(Board board,HttpSession session) {
-		ModelAndView mav= new ModelAndView("home/main");
+	public ModelAndView addBoard(Board board,HttpSession session,HttpServletRequest request) {
+		String userAgent= (String)request.getHeader("User-Agent");
+		 ModelAndView mav= new ModelAndView("home/main");
+		 String[] mobileos= Define.mobileos;
+	     int j = -1;
+	     if(userAgent != null && !userAgent.equals("")){
+	          for(int i = 0 ; i<mobileos.length ; i++){
+	               j = userAgent.indexOf(mobileos[i]);
+	               if(j>  -1){
+	            	   mav.setViewName("home/mobile");
+	               }
+	          }
+	     }
 		Board oriBoard=manageCatolog.selectLoca(board.getBoard_location());
 		Integer id=manageCatolog.selectMaxId();
 		if(id==null) {
@@ -96,8 +120,19 @@ public class ManageController {
 	}
 	
 	@RequestMapping(value="/manage/boardUpdate.html")
-	public ModelAndView updateBoard(Integer board_id) {
-		ModelAndView mav = new ModelAndView("home/main");
+	public ModelAndView updateBoard(Integer board_id,HttpServletRequest request) {
+		String userAgent= (String)request.getHeader("User-Agent");
+		 ModelAndView mav= new ModelAndView("home/main");
+		 String[] mobileos= Define.mobileos;
+	     int j = -1;
+	     if(userAgent != null && !userAgent.equals("")){
+	          for(int i = 0 ; i<mobileos.length ; i++){
+	               j = userAgent.indexOf(mobileos[i]);
+	               if(j>  -1){
+	            	   mav.setViewName("home/mobile");
+	               }
+	          }
+	     }
 		Board board = manageCatolog.selectBoard(board_id);
 		mav.addObject(board);
 		mav.addObject("BODY","updateBoard.jsp");
@@ -105,8 +140,19 @@ public class ManageController {
 	}
 	
 	@RequestMapping(value="/manage/updateBoard.html")
-	public ModelAndView updateBoard(HttpSession session,Board board) {
-		ModelAndView mav = new ModelAndView("home/main");
+	public ModelAndView updateBoard(HttpSession session,Board board,HttpServletRequest request) {
+		String userAgent= (String)request.getHeader("User-Agent");
+		 ModelAndView mav= new ModelAndView("home/main");
+		 String[] mobileos= Define.mobileos;
+	     int j = -1;
+	     if(userAgent != null && !userAgent.equals("")){
+	          for(int i = 0 ; i<mobileos.length ; i++){
+	               j = userAgent.indexOf(mobileos[i]);
+	               if(j>  -1){
+	            	   mav.setViewName("home/mobile");
+	               }
+	          }
+	     }
 		Board oriBoard=manageCatolog.selectLoca(board.getBoard_location());
 		if(oriBoard==null) {
 			manageCatolog.oneBoardLocaUpdate(board);

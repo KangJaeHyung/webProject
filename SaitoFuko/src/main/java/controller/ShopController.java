@@ -231,7 +231,7 @@ public class ShopController {
 	}
 
 	@RequestMapping(value = "/shop/shopPage.html")
-	public ModelAndView shopPage(HttpServletRequest request,Integer pageNum, HttpSession session) {
+	public ModelAndView shopPage(Integer pageNum, HttpSession session,HttpServletRequest request) {
 		String userAgent= (String)request.getHeader("User-Agent");
 		 ModelAndView mav= new ModelAndView("home/main");
 		 String[] mobileos= Define.mobileos;

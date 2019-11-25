@@ -7,13 +7,15 @@
 <!DOCTYPE html>
 <html>
 <head>
+<title>Welcome Saito Fuko</title>
+<link rel="stylesheet" type="text/css" href="../cssImage/mainMobile.css">
 <style>
 
 
 .head {
  /*  background-image:url("../cssImage/title.png");
   background-repeat: no-repeat; */
-  background-color:pink;
+  background-color:#ffc0ed;
   height:10%;
   padding: 15px;
   width:100%;
@@ -33,6 +35,9 @@
   padding: 10px;
 }
 
+.middle{
+min-height:1400px;
+}
 
 #left {
   width: 500;
@@ -83,7 +88,7 @@ body {
   text-align: center;
   text-decoration: none;
   display: inline-block;
-  font-size: 16px;
+  font-size: 35px;
   margin: 4px 2px;
   -webkit-transition-duration: 0.4s; /* Safari */
   transition-duration: 0.4s;
@@ -114,6 +119,13 @@ body {
 	line-height: 100px;
 	font-size: 50px;
 }
+
+#pageNumber{
+	font-size: 70px;
+}
+#pageNumber td{ 
+	width: 100px;
+}
 .btnLogin {
   background-color: green;
   border: none;
@@ -127,7 +139,83 @@ body {
   cursor: pointer;
   width: 100%;
 }
+#postTitle{
+	font-size: 40px;
+}
+#postFont{
+	font-size:25px;
+}
 
+.moblieT td{
+	height: 100px;
+
+}
+.moblieT th{
+	font-size: 30px;
+}
+.moblieT #no{
+	font-size: 18px;
+}
+.middle div{
+font-size:1.2em;
+}
+.middle #justifyRight{
+	background-size: 50px;
+	width: 50px;
+	height: 50px;
+}
+
+.middle #justifyCenter{
+background-size: 50px;
+	width: 50px;
+	height: 50px;
+}
+
+.middle #justifyLeft{
+background-size: 50px;
+	width: 50px;
+	height: 50px;
+}
+.middle .postBtn{
+	height: 50px;
+	font-size: 35px;
+}
+.middle #fontSize{
+	height: 50px;
+	font-size:25px;
+	width: auto;
+}
+.middle #foreColor{
+	height: 50px;
+	font-size:25px;
+	width: auto;
+}
+.middle #text{
+width: 95%;
+height: 600px;
+
+}
+
+.middle .postTitle{
+ 	width: 70%;
+ 	height 50px;
+ 	border: inset 2px;
+ 	font-size: 35px;
+}
+.middle #imageButton{
+	margin-right: 2.5%;
+
+}
+.middle .btnEmo{
+  font-size: 35px;
+}
+#utilDiv{
+padding:5px;
+ padding-left:2.5%; 
+}
+.middle .shopContent{
+ grid-template-rows: 360px 360px 360px;
+}
 </style>
 
  <script src="https://code.jquery.com/jquery-1.12.0.min.js"></script>
@@ -153,7 +241,7 @@ body {
 <nav id="left" style="background-color:#aaa;">
 		<div style="border: inset; margin-bottom: 5px;"> 
 			<c:if test="${sessionScope.loginUser==null}">
- 	 			<a href="#" class="btnLogin">로그인</a>
+ 	 			<a href="../login/mobileLogin.html" class="btnLogin">로그인</a>
  	 		</c:if>
  	 		<c:if test="${sessionScope.loginUser!=null}">
  	 			<jsp:include page="../home/logoutForm.jsp"></jsp:include>

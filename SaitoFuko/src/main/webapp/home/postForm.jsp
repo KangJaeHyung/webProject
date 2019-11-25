@@ -15,7 +15,6 @@
  	border: inset 2px;
 }
 #text{
-
 	margin:auto;
 	moz-appearance: textfield-multiline;
     -webkit-appearance: textarea;
@@ -28,6 +27,10 @@
 	width:80%; height:400px; background:#FFFFFF;
 	border: inset 2px;
 
+}
+
+#text img{
+width: 100%;
 }
 #justifyRight,#justifyCenter,#justifyLeft{
 width:22px;
@@ -59,10 +62,22 @@ margin:0px;
 	margin-right:10%;
 
 }
+
+
 </style>
 
 
 <script type="text/javascript">
+
+function isMobile() {
+	var mobileKeyWords = new Array('iPhone', 'iPod', 'BlackBerry', 'Android', 'Windows CE', 'Windows CE;', 'LG', 'MOT', 'SAMSUNG', 'SonyEricsson', 'Mobile', 'Symbian', 'Opera Mobi', 'Opera Mini', 'IEmobile');
+	for (var word in mobileKeyWords){
+	    if (navigator.userAgent.match(mobileKeyWords[word]) != null){
+	    	document.getElementById("fontDiv").style.display="none";
+	    	break;
+	     }
+	}
+}
 
 function formCheck(form) {
     var con = document.getElementById("text").innerHTML;
@@ -89,6 +104,8 @@ function image(){
 	var url="../post/image.html";
 	window.open(url,"image","width=450,height=200");
 }
+
+
 </script>
 
 <script src="http://code.jquery.com/jquery-1.8.3.min.js"></script>
@@ -116,24 +133,25 @@ function image(){
 <form:hidden path="group_ord"/>
 <form:hidden path="groupLayer"/>
 <div>
-<div style="padding:5px; padding-left:10%; padding-right: 50xp;">
+<div id="utilDiv" >
 <form:input cssClass="postTitle" path="title" placeholder="제목을 적어 주세요."/>
 &nbsp;&nbsp;
-<form:select path="board_id">
+<form:select path="board_id" id="foreColor">
 <c:forEach var="board" items="${boardList}">
 <form:option value="${board.board_id}">${board.board_name}</form:option>
 </c:forEach>
 </form:select>
 </div>
 
-<div style="padding-left:10%; align-content: center; align-items: center;margin-top: 5px; margin-bottom:5px;">
+<div id="utilDiv">
 <input type="button" id="justifyLeft" class="postBtn" onclick="jung('justifyleft')"/>
 <input type="button" id="justifyCenter" class="postBtn" onclick="jung('justifyCenter')"/>
 <input type="button" id="justifyRight" class="postBtn" onclick="jung('justifyRight')"/>
+<div id="fontDiv" style="display: block;">
 <input type="button" id="bold" value="두껍게" class="postBtn" onclick="jung('bold')"/>
 <input type="button" id="italic" value="기울기" class="postBtn" onclick="jung('italic')"/>
 <input type="button" id="underLine" value="밑줄"class="postBtn" onclick="jung('underLine')"/>
- <select id="fontSize" style="width: 100px;height: 21px; margin:0px;">
+ <select id="fontSize" style=" margin:0px;">
         <option value="">글자 크기</option>
         <option value="1">4px</option>
         <option value="2">8px</option>
@@ -143,7 +161,7 @@ function image(){
         <option value="6">20px</option>
         <option value="7">30px</option>
     </select>
-     <select id="foreColor" style="width: 100px;height: 21px; margin:0px;">
+     <select id="foreColor" style=" margin:0px;">
         <option value="">글자 색깔</option>
         <option value="#f00">빨강</option>
         <option value="#00f">파랑</option>
@@ -151,12 +169,19 @@ function image(){
         <option value="#ffff00">노랑</option>
         <option value="#000">검정</option>
     </select>
+    </div>
 </div>
 	<div id="text" contenteditable="true"></div>
-<div align="right"><input class="btn1" type="button" id="imageButton" value="이미지 추가" onclick="image()"/></div>
-<div align="right"><input class="btn1" id="imageButton" type="submit" value="등록하기"></div>
+<div align="right"><input class="btn2" type="button" id="imageButton" value="이미지 추가" onclick="image()"/></div>
+<div align="right"><input class="btn2" id="imageButton" type="submit" value="등록하기"></div>
 <input type="hidden" name="content" value="">
 </div>
 </form:form>
+
+<script type="text/javascript">
+isMobile();
+</script>
+
+
 </body>
 </html>

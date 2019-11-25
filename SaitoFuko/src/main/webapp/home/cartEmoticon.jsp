@@ -12,8 +12,6 @@
 	border-radius: 40px 80px;
 	border: solid;
 	border-color: gray;
-	
-	
 }
 .shopContent{
 	display: grid;
@@ -22,6 +20,44 @@
     width: 100%;
     margin: 5px;
     padding: 15px;
+}
+
+@media(max-width: 700px){
+.shopBtn {
+  font-family: "Roboto", sans-serif;
+  text-transform: uppercase;
+  outline: 0;
+  background: gray;
+  width: 130px;
+  border: 1;
+  padding-right: 5px;
+  padding-left: 5px;
+  padding-top:2px;
+  padding-bottom:2px;
+  color: #FFFFFF;
+  font-size: 35px;
+  -webkit-transition: all 0.3 ease;
+  transition: all 0.3 ease;
+  cursor: pointer;
+}
+.shopBtn2{
+  font-family: "Roboto", sans-serif;
+  text-transform: uppercase;
+  outline: 0;
+  background: #AAAAAA;
+  width: 130px;
+  border: 1;
+  padding-right: 10px;
+  padding-left: 10px;
+  padding-top:2px;
+  padding-bottom:2px;
+  color: #FFFFFF;
+  font-size: 35px;
+  -webkit-transition: all 0.3 ease;
+  transition: all 0.3 ease;
+  cursor: pointer;
+}
+
 }
 .shopBtn {
   font-family: "Roboto", sans-serif;
@@ -67,7 +103,6 @@ margin-right: 20px;
 	
 
 }
-
 </style>
 <script type="text/javascript">
 var result="${result}"
@@ -85,7 +120,7 @@ var result="${result}"
 <body>
 
 <div class="shopTitle"><h2 align="center" class="title">내가 찜한 이모티콘!</h2></div>
-<c:if test="${!empty sessionScope.myCartList || sessionScope.myCartList!=null}">
+<c:if test="${!empty sessionScope.myCartList}">
 <div><a href="../shop/buyEmo.html"><input type="button" class="shopBtn" value="전부 구입하기" /></a></div>
 <div class="shopContent" align="center">
 	<c:forEach items="${sessionScope.myCartList}" var="emo">

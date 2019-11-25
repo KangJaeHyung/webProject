@@ -37,6 +37,27 @@
   transition: all 0.3 ease;
   cursor: pointer;
 }
+
+@media(max-width: 700px){
+.shopBtn {
+  font-family: "Roboto", sans-serif;
+  text-transform: uppercase;
+  outline: 0;
+  background: gray;
+  width: 130px;
+  border: 1;
+  padding-right: 5px;
+  padding-left: 5px;
+  padding-top:2px;
+  padding-bottom:2px;
+  color: #FFFFFF;
+  font-size: 35px;
+  -webkit-transition: all 0.3 ease;
+  transition: all 0.3 ease;
+  cursor: pointer;
+}
+}
+
 .shopBtn2{
   font-family: "Roboto", sans-serif;
   text-transform: uppercase;

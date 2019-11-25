@@ -1,0 +1,186 @@
+
+@charset "UTF-8";
+
+
+
+.btn1 {
+  font-family: 'Yeon Sung', cursive;
+  text-transform: uppercase;
+  outline: 0;
+  background: gray;
+  width:100%;
+  height:100%;
+  border: 1;
+  padding: 5px;
+  color: white;
+  font-size: 40px;
+  margin:auto;
+  margin-right:10px;
+  -webkit-transition: all 0.3 ease;
+  transition: all 0.3 ease;
+  cursor: pointer;
+}
+.btn2 {
+  font-family: 'Yeon Sung', cursive;
+  text-transform: uppercase;
+  outline: 0;
+  background: gray;
+  width:50%;
+  height:100%;
+  border: 1;
+  padding: 5px;
+  color: white;
+  font-size: 40px;
+  margin:auto;
+  margin-right:10px;
+  -webkit-transition: all 0.3 ease;
+  transition: all 0.3 ease;
+  cursor: pointer;
+}
+
+.title{
+font-size:60px;
+font-family: 'Yeon Sung', cursive;
+}
+
+.id{
+  font-family: "Roboto", sans-serif;
+  background: #f2f2f2;
+  width: 100%;
+  border: 0;
+  margin: auto;
+  padding: 5px;
+ 
+  font-size: 10px;
+  
+}
+.pwd {
+  font-family: "Roboto", sans-serif;
+ 
+  background: #f2f2f2;
+  width: 100%;
+  border: 0;
+  margin: auto;
+  padding: 5px;
+  font-size: 10px;
+}
+
+
+.button {
+  font-family: "Roboto", sans-serif;
+  text-transform: uppercase;
+  outline: 0;
+  background: gray;
+  width: 100%;
+  height:100%;
+  border: 1;
+  padding: 15px;
+  color: #FFFFFF;
+  font-size: 14px;
+  margin:auto;
+  -webkit-transition: all 0.3 ease;
+  transition: all 0.3 ease;
+  cursor: pointer;
+}
+.user_id,.nickname,.email,.gender,.birthday,.password,.name{
+  font-family: "Roboto", sans-serif;
+  background: #f2f2f2;
+  width: 95%;
+  border: 1;
+  padding: 5px;
+  margin:5px;
+  font-size: 20px;
+}
+
+.Nickname,.Email,.Gender,.Birthday,.Password,.Name{
+  font-family: "Roboto", sans-serif;
+  background: #f2f2f2;
+  width: 150px;
+  border: 1;
+  padding: 5px;
+  margin:5px;
+  font-size: 20px;
+}
+
+.entryTitle{
+font-family: 'Yeon Sung', cursive;
+
+}
+.submit,.idCheck {
+  font-family: "Roboto", sans-serif;
+  text-transform: uppercase;
+  outline: 0;
+  background: gray;
+  width: 80px;
+  height:100%;
+  border: 1;
+  padding: 10px;
+  color: #FFFFFF;
+  font-size: 14px;
+  -webkit-transition: all 0.3 ease;
+  transition: all 0.3 ease;
+  cursor: pointer;
+}
+
+
+
+.findBtn {
+  font-family: "Roboto", sans-serif;
+  text-transform: uppercase;
+  outline: 0;
+  background: gray;
+  width: 120px;
+  border: 1;
+  padding: 10px;
+  color: #FFFFFF;
+  font-size: 14px;
+  -webkit-transition: all 0.3 ease;
+  transition: all 0.3 ease;
+  cursor: pointer;
+}
+.column{
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+    grid-template-rows: 200px 200px 200px 200px;
+    width: 100%;
+    margin: 5px;
+    padding: 15px;
+}
+.space{
+	background-color:#DDDDDD;
+	border: outset;
+    margin: 5px;
+    padding: 10px;
+}
+.pfont1{
+	font-family: 'Yeon Sung', cursive;
+	font-size: 18px;
+}
+.pfont2{
+	 font-family: "Roboto", sans-serif;
+	font-size: 20px;
+}
+
+.modifyBtn {
+  font-family: "Roboto", sans-serif;
+  text-transform: uppercase;
+  outline: 0;
+  background: gray;
+  width: 110px;
+  height:100%;
+  border: 1;
+  padding: 10px;
+  color: #FFFFFF;
+  font-size: 14px;
+  -webkit-transition: all 0.3 ease;
+  transition: all 0.3 ease;
+  cursor: pointer;
+}
+
+.shopTitle{
+	border-radius: 40px 80px;
+	border: 1xp;
+	border-color: gray;
+	
+	
+}

@@ -24,37 +24,6 @@
 </script>
 <style>
 
-@media screen and (max-width: 900px) {
-.head {
-  background-image:url("../cssImage/title.png");
-  height:10%;
-  padding: 15px;
-  width:100%;
-  text-align: center;
-  font-size: 20px;
-  cursor: pointer;
-}
-
-.grid-container {
-  width:100%;
-} 
-
-
-.left,
-.middle{
- height: 100%;
-  padding: 10px;
-}
-
-
-.left {
-  display:none;
-  padding-top:20px;
-  padding-bottom: 20px; 
-  }
-
-}
-
 * {
   box-sizing: border-box;
 }
@@ -155,7 +124,11 @@ width:1080px;
   color: white;
 }
 
-
+#utilDiv{
+padding:5px;
+ padding-left:10%; 
+ padding-right: 50xp;
+}
 
 
 </style>

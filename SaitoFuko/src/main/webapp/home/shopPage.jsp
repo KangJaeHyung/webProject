@@ -96,7 +96,7 @@
 	</c:forEach>
 </div>
 <div align="center">
-<table>
+<table id="pageNumber">
 <tr>
 
 <td>

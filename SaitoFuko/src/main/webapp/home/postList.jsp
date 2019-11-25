@@ -53,25 +53,25 @@ cursor:pointer;
 </head>
 <body>
 <h2 class="title" align="center">${board_name}</h2>
-<table id="customers">
+<table id="customers" class="moblieT">
 				<tr>
-					<th width="100">게시번호</th>
-					<th width="300">제목</th>
-					<th width="100">id</th>
-					<th width="150">날짜</th>
-					<th width="100">조회수</th>
+					<th id="no" width="70">no</th>
+					<th width="700" >제목</th>
+					<th width="80">id</th>
+					<th width="80">날짜</th>
+					<th id="no" width="50">조회</th>
 				</tr>
 				<c:forEach var="post" items="${postList}">
 					<tr onclick="location.href='../post/postRead.html?post_no='+'${post.post_no}'">
-						<td>${post.post_no}</td>
-						<td><a>[${post.board_name}]</a>${post.title}</td>
-						<td>${post.nickname}(${post.user_id})</td>
+						<td id="postFont">${post.post_no}</td>
+						<td id="postTitle"><a>[${post.board_name}]</a>${post.title}</td>
+						<td id="postFont">${post.nickname}(${post.user_id})</td>
 						<td>${post.post_date}</td>
-						<td>${post.post_views}</td>
+						<td id="postFont">${post.post_views}</td>
 					</tr>
 				</c:forEach>
 			</table>
-<table>
+<table id="pageNumber">
 <tr>
 <td>
 <c:if test="${pageNum==1}">
