@@ -95,7 +95,7 @@ function emoClick2() {
 	 
 }
 
-function tableClick(num){
+function tableClick(num,par){
 	
 	var html = "<form action='../comment/commentWrite.html' method='post'  onsubmit='return check(this)'>";
 	html=html+'<table id="nob">';
@@ -172,7 +172,7 @@ function check(frm){
 				</c:if>
 			</div>
 		</td>
-		<td id="td_${comment.comment_no}_close" width="120" onclick="tableClick(${comment.comment_no})">
+		<td id="td_${comment.comment_no}_close" width="120" onclick="tableClick(${comment.comment_no},${comment.comment_parent})">
 			<font size=2>
 				${comment.comment_date}
 			</font>

@@ -30,7 +30,7 @@
 }
 
 #text img{
-width: 100%;
+max-width: 100%;
 }
 #justifyRight,#justifyCenter,#justifyLeft{
 width:22px;
@@ -117,7 +117,6 @@ function image(){
  	$("#foreColor").change(function(){ 
    		document.execCommand('foreColor', false, $(this).val());
     });
- 	
  	$("#fontSize").change(function(){
   		document.execCommand('fontSize', false, $(this).val());
 	});
@@ -136,7 +135,7 @@ function image(){
 <div id="utilDiv" >
 <form:input cssClass="postTitle" path="title" placeholder="제목을 적어 주세요."/>
 &nbsp;&nbsp;
-<form:select path="board_id" id="foreColor">
+<form:select path="board_id">
 <c:forEach var="board" items="${boardList}">
 <form:option value="${board.board_id}">${board.board_name}</form:option>
 </c:forEach>
@@ -161,7 +160,7 @@ function image(){
         <option value="6">20px</option>
         <option value="7">30px</option>
     </select>
-     <select id="foreColor" style=" margin:0px;">
+     <select id="foreColor" style="margin:0px;">
         <option value="">글자 색깔</option>
         <option value="#f00">빨강</option>
         <option value="#00f">파랑</option>

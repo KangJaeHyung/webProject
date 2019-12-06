@@ -30,17 +30,20 @@
 
 body {
   font-family: Arial, Helvetica, sans-serif;
-  background-image: url("../cssImage/body.png");
+
+background-image: url("../cssImage/body.png");
+
   background-repeat: no-repeat;
-  background-size: 100% auto;
+  background-size: 100pc auto;
   background-image: center;
 }
 
 
 .head {
-  margin-left:10%;
+  margin-left:auto;
   margin-right:auto;
-  background-image:url("../cssImage/title.png");
+  background-image:url("../cssImage/title2.png");
+  background-size:100% auto;
   padding: 15px;
   width:1080px;
   text-align: center;
@@ -52,7 +55,7 @@ body {
 }
 
 .footer {
-	margin-left:10%;
+	margin-left:auto;
 	margin-right:auto;
   padding: 15px;
   width:1080px;
@@ -64,7 +67,7 @@ body {
 
 
 .grid-container {
-margin-left:10%;
+margin-left:auto;
 margin-right:auto;
 width:1080px;
   display: grid;

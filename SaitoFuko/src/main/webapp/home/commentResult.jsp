@@ -30,6 +30,9 @@ if(result=='noLoginC'){
 if(result=='noComment'){
 	alert("내용을 입력해 주세요.");
 }
+if(result=='updatePost'){
+	alert("변경되었습니다.")
+}
 location.replace("../post/postRead.html?post_no="+no);
 
 </script>

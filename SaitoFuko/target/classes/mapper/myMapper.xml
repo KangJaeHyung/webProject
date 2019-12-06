@@ -27,7 +27,7 @@ select max(comment_no) from comment_post
 <select id="selectCommentList" resultType="model.Comment_post">
 select c.*,u.nickname nickname
 from comment_post c, user_info u
-where c.post_no=#{post_no}
+where post_no=#{post_no}
 and u.user_id=c.user_id
 order by comment_parent asc,comment_no asc
 </select>

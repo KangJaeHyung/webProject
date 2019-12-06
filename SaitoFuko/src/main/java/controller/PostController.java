@@ -40,6 +40,7 @@ public class PostController {
 		ModelAndView mav = new ModelAndView("home/commentResult");
 		post.setContent(post.getContent().replaceAll("<img", "<img style='max-width:100%; height:auto;'"));
 		postCatalog.updatePost(post);
+		mav.addObject("post_no", post.getPost_no());
 		mav.addObject("result","updatePost");
 		return mav;
 	}
