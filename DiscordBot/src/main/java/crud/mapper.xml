@@ -4,46 +4,130 @@
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="crud.mapper">
 	<insert id="insertUser" parameterType="model.User_table">
-	insert into user_table values(
+		insert into user_table values(
 		#{user_code},#{user_name} ,#{cp_count}
-	)
+		)
 	</insert>
 	<insert id="insertBossDamage" parameterType="model.Boss_count">
-	insert into boss_count values(
-		#{user_code} ,#{round},#{named},#{damage},#{next_time},#{attack_date}
-	)
+		insert into boss_count values(
+		#{user_code}
+		,#{round},#{named},#{damage},#{next_time},#{attack_date}
+		)
 	</insert>
-	
+	<insert id="insertReserv" parameterType="model.Boss_reservation">
+		insert into boss_reservation values(
+		#{user_code},#{user_name},#{round},#{named},#{damage},#{next_time},#{reserv_date}
+		)
+	</insert>
+	<insert id="insertClanDate" parameterType="model.Clan_date">
+		insert into Clan_date values(
+		0,#{start_day},#{end_day}
+		)
+	</insert>
+
+
+	<select id="selectDay" resultType="model.Clan_date">
+		select * from clan_date
+	</select> 
 	<select id="selectUserList" resultType="model.User_table">
-	select * from user_table
+		select * from user_table
 	</select>
-	<select id="selectUser" parameterType="model.User_table" resultType="model.User_table">
-	select * from user_table where user_code=#{user_code}
+	<select id="selectUser" parameterType="model.User_table"
+		resultType="model.User_table">
+		select * from user_table where user_code=#{user_code}
 	</select>
-	<select id="selectBossCount" parameterType="model.Condition" resultType="model.Boss_count">
-	select * from boss_count where user_code=#{user_code} 
-	and to_date(attack_date,'YYYY-MM-DD HH24:MI:SS') 
-	between to_date(#{startDate},'YYYY-MM-DD HH24:MI:SS') and to_date(#{endDate},'YYYY-MM-DD HH24:MI:SS')
-	order by to_date(attack_date,'YYYY-MM-DD HH24:MI:SS') asc
+	<select id="selectBossCount" parameterType="model.Condition"
+		resultType="model.Boss_count">
+		select * from boss_count where user_code=#{user_code}
+		and to_date(attack_date,'YYYY-MM-DD HH24:MI:SS')
+		between to_date(#{startDate},'YYYY-MM-DD HH24:MI:SS') and
+		to_date(#{endDate},'YYYY-MM-DD HH24:MI:SS')
+		order by round asc,named asc
+	</select>
+	<select id="selectTodayAllDamage"
+		parameterType="model.Condition" resultType="model.User_boss_count">
+		select u.user_name user_name,u.user_code user_code, c.round round,c.named
+		named,c.damage damage,c.next_time next_time,c.attack_date attack_date
+		from boss_count c,user_table u
+		where
+		u.user_code = c.user_code
+		and
+		to_date(attack_date,'YYYY-MM-DD HH24:MI:SS')
+		between to_date(#{startDate},'YYYY-MM-DD HH24:MI:SS') and
+		to_date(#{endDate},'YYYY-MM-DD HH24:MI:SS')
+		order by user_name asc,to_date(attack_date,'YYYY-MM-DD HH24:MI:SS') asc
+	</select>
+	<select id="selectBossReserv"
+		parameterType="model.Boss_reservation"
+		resultType="model.Boss_reservation">
+		select * from boss_reservation where user_code=#{user_code} and
+		round=#{round} and named=#{named}
+	</select>
+	<select id="selectBossReservAll"
+		parameterType="model.Boss_reservation"
+		resultType="model.Boss_reservation">
+		select * from boss_reservation
+		<if test="round!=0">where round=#{round} and named=#{named}
+		</if>
+		order by round asc,named asc,to_date(reserv_date,'YYYY-MM-DD
+		HH24:MI:SS') asc
+	</select>
+	<select id="selectBossList" resultType="model.Boss_count">
+		select * from boss_count
+	</select>
+	<select id="selectChar" parameterType="String"
+		resultType="model.Character_db">
+		select * from
+		(select * from character_db order by length(c_name) asc)
+		where c_keyword like #{keyword} and rownum= 1
+	</select>
+	<select id="selectCharAll" resultType="model.Character_db">
+		select * from character_db
+	</select>
+	<select id="selectCharLoca" resultType="model.Character_db">
+		select * from character_db where c_position=#{location} order by c_location
+		asc
 	</select>
 	
+	
+
+	<update id="updateDay">
+		update clan_date set day=day+1
+	</update>
+
 	<update id="updateCount" parameterType="String">
-	update user_table set cp_count=cp_count-1 where user_code=#{user}
+		update user_table set cp_count=cp_count-1 where user_code=#{user}
 	</update>
 	<update id="resetCp">
-	update user_table set cp_count=3
+		update user_table set cp_count=3
 	</update>
+	<update id="resetCpUser" parameterType="String">
+		update user_table set cp_count=3 where user_code=#{user_code}
+	</update>
+
+	<delete id="resetBr">
+		delete from boss_reservation
+	</delete>
 	<delete id="resetUser">
-	delete from user_table
+		delete from user_table
 	</delete>
 	<delete id="resetDamage" parameterType="model.Condition">
-	delete from boss_count where
-	user_code=#{user_code} 
-	and to_date(attack_date,'YYYY-MM-DD HH24:MI:SS') 
-	between to_date(#{startDate},'YYYY-MM-DD HH24:MI:SS') and to_date(#{endDate},'YYYY-MM-DD HH24:MI:SS')
+		delete from boss_count where
+		user_code=#{user_code}
+		and to_date(attack_date,'YYYY-MM-DD HH24:MI:SS')
+		between to_date(#{startDate},'YYYY-MM-DD HH24:MI:SS') and
+		to_date(#{endDate},'YYYY-MM-DD HH24:MI:SS')
 	</delete>
 	<delete id="deleteUser" parameterType="String">
-	delete from user_table where user_name=#{user_name}
+		delete from user_table where user_name=#{user_name}
 	</delete>
-	
+	<delete id="deleteBossReserv"
+		parameterType="model.Boss_reservation">
+		delete from boss_reservation
+		where user_code=#{user_code} and round=#{round} and named=#{named} and
+		rownum = 1
+	</delete>
+	<delete id="deleteDate">
+		delete from clan_date
+	</delete>
 </mapper>

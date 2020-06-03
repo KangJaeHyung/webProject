@@ -1,4 +1,4 @@
-package main;
+package mainStart;
 
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
 

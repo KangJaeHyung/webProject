@@ -1,8 +1,12 @@
 package googleSheet;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.URISyntaxException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -18,7 +22,6 @@ import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.client.util.store.FileDataStoreFactory;
 import com.google.api.services.sheets.v4.Sheets;
-import com.google.api.services.sheets.v4.Sheets.Spreadsheets.Values.Append;
 import com.google.api.services.sheets.v4.SheetsScopes;
 import com.google.api.services.sheets.v4.model.ValueRange;
 
@@ -27,7 +30,7 @@ import com.google.api.services.sheets.v4.model.ValueRange;
  *
  * @author lks21c
  */
-public class Quickstart {
+public class inputSheet {
 	/**
 	 * OAUTH 2.0 연동시 지정한 OAuth 2.0 클라이언트 이름
 	 */
@@ -47,7 +50,7 @@ public class Quickstart {
 	/**
 	 * Global instance of the JSON factory.
 	 */
-	private static final JsonFactory JSON_FACTORY = JacksonFactory.getDefaultInstance();
+	private final JsonFactory JSON_FACTORY = JacksonFactory.getDefaultInstance();
 
 	/**
 	 * Global instance of the HTTP transport.
@@ -57,7 +60,7 @@ public class Quickstart {
 	/**
 	 * Google Sheet API 권한을 SCOPE로 지정
 	 */
-	private static final List<String> SCOPES = Arrays.asList(SheetsScopes.SPREADSHEETS);
+	private final List<String> SCOPES = Arrays.asList(SheetsScopes.SPREADSHEETS);
 
 	/**
 	 * HTTP_TRANSPORT, DATA_STORE_FACTORY 초기화
@@ -75,7 +78,7 @@ public class Quickstart {
 	/**
 	 * OAUTH 2.0 연동시 사용될 callback용 local receiver 포트 지정
 	 */
-	private static final int LOCAL_SERVER_RECEIVER_PORT = 8080;
+	private final int LOCAL_SERVER_RECEIVER_PORT = 8080;
 
 	/**
 	 * 인증 모드 2개
@@ -89,10 +92,12 @@ public class Quickstart {
 	 *
 	 * @return Credential object.
 	 * @throws IOException
+	 * @throws URISyntaxException
 	 */
-	public static Credential getOauth2Authorize() throws IOException {
+	public Credential getOauth2Authorize() throws IOException {
 		// OAUTH 2.0용 secret josn 로드
-		InputStream in = Quickstart.class.getResourceAsStream("/credentials.json");
+
+		InputStream in = new FileInputStream(new File("c:/image/credentials.json"));
 		GoogleClientSecrets clientSecrets = GoogleClientSecrets.load(JSON_FACTORY, new InputStreamReader(in));
 
 		GoogleAuthorizationCodeFlow flow = new GoogleAuthorizationCodeFlow.Builder(HTTP_TRANSPORT, JSON_FACTORY,
@@ -111,9 +116,9 @@ public class Quickstart {
 	 * @return Credential object.
 	 * @throws IOException
 	 */
-	public static Credential getServiceAccountAuthorize() throws IOException {
+	public Credential getServiceAccountAuthorize() throws IOException {
 
-		InputStream in = Quickstart.class.getResourceAsStream("/service.json");
+		InputStream in = inputSheet.class.getResourceAsStream("/service.json");
 		Credential credential = GoogleCredential.fromStream(in).createScoped(SCOPES);
 		return credential;
 	}
@@ -124,7 +129,7 @@ public class Quickstart {
 	 * @return 인증이 통과된 Sheets API client service
 	 * @throws IOException
 	 */
-	public static Sheets getSheetsService(AuthMode authMode) throws IOException {
+	public Sheets getSheetsService(AuthMode authMode) throws IOException {
 		Credential credential = null;
 		if (authMode == AuthMode.OAUTH20) {
 			credential = getOauth2Authorize();
@@ -135,36 +140,81 @@ public class Quickstart {
 				.build();
 	}
 
-	
-	
-	public static void main(String[] args) throws IOException {
+	public void inputSheets(int day, String userName, int round, int named, int damage, int nextTime)
+			throws IOException {
 		// 기호에 따라 OAUTH2.0용 인증이나 서비스 계정으로 인증을 수행 후 Sheet Service 객체를 불러온다.
 		// Sheets service = getSheetsService(AuthMode.OAUTH20);
 		Sheets service = getSheetsService(AuthMode.OAUTH20);
-
 		// 아래의 샘플 구글 시트 URL에서 중간의 문자열이 spreed sheet id에 해당한다.
 		// https://docs.google.com/spreadsheets/d/1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgvE2upms/edit
-		String spreadsheetId = "1rmHmP5gXREoykOpnYiSOYrqnqZRzP9xwAe1XqRKS4t0";
-
-		String range = "fuko!C6:I24";
-		ValueRange content = service.spreadsheets().values().get(spreadsheetId, "fuko!L17").execute();
-		content.setRange("fuko!D6");
-		Append append = service.spreadsheets().values().append(spreadsheetId, "fuko!D6", content);
+		String spreadsheetId = "1-0MOSCHnl2AvRowrXiUetEJJ2max3qM-9tD-HXGCBF4";
+		String range = "log!C4:I900";
 		ValueRange response = service.spreadsheets().values().get(spreadsheetId, range).execute();
 		List<List<Object>> values = response.getValues();
-		if (values == null || values.size() == 0) {
-			System.out.println("No data found.");
-		} else {
-			for (List row : values) {
-				for(int i = 0 ; i<row.size();i++) {
-					String str = row.get(i).toString();
-					if(str.equals("")||str==null) {
-						str="0000000";
-					}
-					System.out.print(str+" ");
-				}
-				System.out.println();
+		int num = 4;
+		boolean next_time = false;
+		if (nextTime == 1) {
+			next_time = true;
+		}
+		for (List row : values) {
+			String str = row.get(1).toString();
+			if (str.equals("") || str == null) {
+				List<List<Object>> values2 = new ArrayList<List<Object>>();
+				List<Object> requests = new ArrayList<Object>();
+				requests.add(day);
+				requests.add(userName);
+				requests.add(round);
+				requests.add(named);
+				requests.add(damage);
+				requests.add("");
+				requests.add(next_time);
+				values2.add(requests);
+				ValueRange content = new ValueRange();
+				content.setValues(values2);
+				service.spreadsheets().values().update(spreadsheetId, "log!C" + num, content)
+						.setValueInputOption("USER_ENTERED").execute();
+				return;
 			}
+			num++;
 		}
 	}
+
+	public void deleteSheets(int day, String userName) throws IOException {
+		// 기호에 따라 OAUTH2.0용 인증이나 서비스 계정으로 인증을 수행 후 Sheet Service 객체를 불러온다.
+		// Sheets service = getSheetsService(AuthMode.OAUTH20);
+		Sheets service = getSheetsService(AuthMode.OAUTH20);
+		// 아래의 샘플 구글 시트 URL에서 중간의 문자열이 spreed sheet id에 해당한다.
+		// https://docs.google.com/spreadsheets/d/1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgvE2upms/edit
+		String spreadsheetId = "1-0MOSCHnl2AvRowrXiUetEJJ2max3qM-9tD-HXGCBF4";
+		int startNum = 4 + (day - 1) * 90;
+		int endNum = 183+ (day - 1) * 180;
+		String range = "log!C" + startNum + ":I" + endNum;
+		ValueRange response = service.spreadsheets().values().get(spreadsheetId, range).execute();
+		List<List<Object>> values = response.getValues();
+		int num = 4 + (day - 1) * 90;
+		boolean next_time = false;
+		for (List row : values) {
+			String str = row.get(1).toString();
+			if (str.equals(userName)) {
+				if (Integer.valueOf(row.get(0).toString()) == day) {
+					List<List<Object>> values2 = new ArrayList<List<Object>>();
+					List<Object> requests = new ArrayList<Object>();
+					requests.add("");
+					requests.add("");
+					requests.add("");
+					requests.add("");
+					requests.add("");
+					requests.add("");
+					requests.add(next_time);
+					values2.add(requests);
+					ValueRange content = new ValueRange();
+					content.setValues(values2);
+					service.spreadsheets().values().update(spreadsheetId, "log!C" + num, content)
+							.setValueInputOption("USER_ENTERED").execute();
+				}
+			}
+			num++;
+		}
+	}
+
 }

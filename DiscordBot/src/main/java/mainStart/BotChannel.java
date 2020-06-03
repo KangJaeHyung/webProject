@@ -1,4 +1,4 @@
-package main;
+package mainStart;
 
 import java.util.Collection;
 import java.util.List;

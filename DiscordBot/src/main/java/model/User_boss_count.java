@@ -1,14 +1,25 @@
 package model;
 
-public class Condition {
-	private String startDate;
-	private String endDate;
+public class User_boss_count {
+	private String user_name;
 	private String user_code;
 	private Integer round;
 	private Integer named;
 	private Integer damage;
 	private Integer next_time;
 	private String attack_date;
+	public String getUser_name() {
+		return user_name;
+	}
+	public void setUser_name(String user_name) {
+		this.user_name = user_name;
+	}
+	public void setUser_code(String user_code) {
+		this.user_code = user_code;
+	}
+	public String getUser_code() {
+		return user_code;
+	}
 	public Integer getRound() {
 		return round;
 	}
@@ -39,23 +50,4 @@ public class Condition {
 	public Integer getDamage() {
 		return damage;
 	}
-	public String getEndDate() {
-		return endDate;
-	}
-	public void setEndDate(String endDate) {
-		this.endDate = endDate;
-	}
-	public String getStartDate() {
-		return startDate;
-	}
-	public void setStartDate(String startDate) {
-		this.startDate = startDate;
-	}
-	public String getUser_code() {
-		return user_code;
-	}
-	public void setUser_code(String user_code) {
-		this.user_code = user_code;
-	}
-	
 }
