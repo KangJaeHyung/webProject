@@ -4,7 +4,6 @@ public class Boss_count {
 	private String user_code;
 	private Integer round;
 	private Integer named;
-	private Integer damage;
 	private Integer next_time;
 	private String attack_date;
 	public void setUser_code(String user_code) {
@@ -36,12 +35,6 @@ public class Boss_count {
 	}
 	public void setAttack_date(String attack_date) {
 		this.attack_date = attack_date;
-	}
-	public void setDamage(Integer damage) {
-		this.damage = damage;
-	}
-	public Integer getDamage() {
-		return damage;
 	}
 	
 }

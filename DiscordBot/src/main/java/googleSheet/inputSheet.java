@@ -187,7 +187,7 @@ public class inputSheet {
 		// https://docs.google.com/spreadsheets/d/1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgvE2upms/edit
 		String spreadsheetId = "1-0MOSCHnl2AvRowrXiUetEJJ2max3qM-9tD-HXGCBF4";
 		int startNum = 4 + (day - 1) * 90;
-		int endNum = 183+ (day - 1) * 180;
+		int endNum = 183 + (day - 1) * 180;
 		String range = "log!C" + startNum + ":I" + endNum;
 		ValueRange response = service.spreadsheets().values().get(spreadsheetId, range).execute();
 		List<List<Object>> values = response.getValues();
@@ -211,6 +211,48 @@ public class inputSheet {
 					content.setValues(values2);
 					service.spreadsheets().values().update(spreadsheetId, "log!C" + num, content)
 							.setValueInputOption("USER_ENTERED").execute();
+				}
+			}
+			num++;
+		}
+	}
+
+	public void deleteSheets(int day, String userName, Integer dmg, Integer round, Integer named) throws IOException {
+		// 기호에 따라 OAUTH2.0용 인증이나 서비스 계정으로 인증을 수행 후 Sheet Service 객체를 불러온다.
+		// Sheets service = getSheetsService(AuthMode.OAUTH20);
+		Sheets service = getSheetsService(AuthMode.OAUTH20);
+		// 아래의 샘플 구글 시트 URL에서 중간의 문자열이 spreed sheet id에 해당한다.
+		// https://docs.google.com/spreadsheets/d/1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgvE2upms/edit
+		String spreadsheetId = "1-0MOSCHnl2AvRowrXiUetEJJ2max3qM-9tD-HXGCBF4";
+		int startNum = 4 + (day - 1) * 90;
+		int endNum = 183 + (day - 1) * 180;
+		String range = "log!C" + startNum + ":I" + endNum;
+		ValueRange response = service.spreadsheets().values().get(spreadsheetId, range).execute();
+		List<List<Object>> values = response.getValues();
+		int num = 4 + (day - 1) * 90;
+		boolean next_time = false;
+		for (List row : values) {
+			String name = row.get(1).toString();
+			if (name.equals(userName)) {
+				Integer sheetRound = Integer.valueOf(row.get(2).toString());
+				Integer sheetNamed = Integer.valueOf(row.get(3).toString());
+				Integer sheetDmg = Integer.valueOf(row.get(4).toString());
+				if (Integer.valueOf(row.get(0).toString()) == day && sheetDmg.equals(dmg) && sheetRound.equals(round)&&sheetNamed.equals(named)) {
+					List<List<Object>> values2 = new ArrayList<List<Object>>();
+					List<Object> requests = new ArrayList<Object>();
+					requests.add("");
+					requests.add("");
+					requests.add("");
+					requests.add("");
+					requests.add("");
+					requests.add("");
+					requests.add(next_time);
+					values2.add(requests);
+					ValueRange content = new ValueRange();
+					content.setValues(values2);
+					service.spreadsheets().values().update(spreadsheetId, "log!C" + num, content)
+							.setValueInputOption("USER_ENTERED").execute();
+					return;
 				}
 			}
 			num++;

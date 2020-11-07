@@ -3,6 +3,7 @@ package mainStart;
 import java.util.List;
 
 import crud.CrudProcess;
+import model.Boss_count;
 import model.Clan_date;
 import net.dv8tion.jda.core.AccountType;
 import net.dv8tion.jda.core.JDA;
@@ -22,8 +23,7 @@ public class Main {
 		JDABuilder jb = new JDABuilder(AccountType.BOT);
 		jb.setAutoReconnect(true);
 		jb.setStatus(OnlineStatus.DO_NOT_DISTURB);
-		jb.setToken("토큰");
-
+		jb.setToken("NjkzODQyMDE0MTI2NDczMjM3.");//Xu92tQ.Sv1C54Uxz6ywBRNLPgu94SqwPeM
 		jb.addEventListener(new TListener());
 		jb.setGame(Game.of(GameType.DEFAULT, "귀여운 막둥이 일"));
 		jb.setStatus(OnlineStatus.ONLINE);
@@ -33,18 +33,18 @@ public class Main {
 			List<Guild> glist = jda.getGuilds();
 			for (Guild guild : glist) {
 				System.out.println(guild.getName() + " : " + guild.getId());
-				System.out.println(guild.getOwner().getEffectiveName());
+				System.out.println(guild.getOwner().getEffectiveName()+guild.getOwner().getAsMention());
 			}
-			TextChannel ch = jda.getTextChannelById("630193396232749089");
-			
-//			ch.sendMessage("안녕하세요! 할로윈쿄우카봇이에요. 실행이 완료되었습니다!").queue();
-//			new BotChat(jda).start();
+//		
+
+			new BotChat(jda).start();
 			BotTimer timer = new BotTimer(jda);
 			timer.start();
 			CrudProcess crud = new CrudProcess();
 			Clan_date date=crud.selectDay();
 			if(date!=null) {
 				TListener.day= date.getDay();	
+				Boss_count bs = crud.selectRN();
 				System.out.println(TListener.day);
 			}else {
 				TListener.day= 0;

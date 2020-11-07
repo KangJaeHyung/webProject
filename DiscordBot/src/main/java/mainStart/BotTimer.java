@@ -41,6 +41,7 @@ public class BotTimer extends Thread {
 
 			}
 			if (c.get(Calendar.HOUR_OF_DAY) == 0 && c.get(Calendar.MINUTE) == 0) {
+				crud.resetGateCp();
 				Clan_date day = crud.selectDay();
 				if (day != null) {
 					String start = day.getStart_day();
@@ -60,6 +61,7 @@ public class BotTimer extends Thread {
 					int b = date.compareTo(endDate);
 					if (a >= 0 && b >= 0) {
 						crud.deleteDate();
+						crud.resetDmg();
 						jda.getTextChannelById("600297082703577088").sendMessage("클랜전이 끝났습니다! 모두 수고하셧어요!").queue();
 					}
 				} else {
@@ -93,6 +95,7 @@ public class BotTimer extends Thread {
 			}
 			if (a >= 0 && b >= 0) {
 				crud.deleteDate();
+				
 				jda.getTextChannelById("600297082703577088").sendMessage("클랜전이 끝났습니다! 모두 수고하셧어요!").queue();
 			}
 			TListener.day = day.getDay();

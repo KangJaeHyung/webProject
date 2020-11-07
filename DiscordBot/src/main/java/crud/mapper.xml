@@ -8,6 +8,12 @@
 		#{user_code},#{user_name} ,#{cp_count}
 		)
 	</insert>
+	<insert id="insertGateUser" parameterType="model.Gate_user_table">
+		insert into gate_user_table values(
+		#{user_code},#{user_name} ,#{cp_count}
+		)
+	</insert>
+	
 	<insert id="insertBossDamage" parameterType="model.Boss_count">
 		insert into boss_count values(
 		#{user_code}
@@ -32,17 +38,31 @@
 	<select id="selectUserList" resultType="model.User_table">
 		select * from user_table
 	</select>
+	<select id="selectGateUserList" resultType="model.Gate_user_table">
+		select * from gate_user_table
+	</select>
 	<select id="selectUser" parameterType="model.User_table"
 		resultType="model.User_table">
 		select * from user_table where user_code=#{user_code}
 	</select>
+	<select id="selectGateUser" parameterType="String"
+		resultType="model.Gate_user_table">
+		select * from gate_user_table where user_code=#{user_code}
+	</select>
+	<select id="selectGateUserNick" parameterType="String"
+		resultType="model.Gate_user_table">
+		select * from gate_user_table where user_name=#{user_name}
+	</select>
+	
+	
+	
 	<select id="selectBossCount" parameterType="model.Condition"
 		resultType="model.Boss_count">
 		select * from boss_count where user_code=#{user_code}
 		and to_date(attack_date,'YYYY-MM-DD HH24:MI:SS')
 		between to_date(#{startDate},'YYYY-MM-DD HH24:MI:SS') and
 		to_date(#{endDate},'YYYY-MM-DD HH24:MI:SS')
-		order by round asc,named asc
+		order by to_date(attack_date,'YYYY-MM-DD HH24:MI:SS') asc
 	</select>
 	<select id="selectTodayAllDamage"
 		parameterType="model.Condition" resultType="model.User_boss_count">
@@ -88,15 +108,41 @@
 		select * from character_db where c_position=#{location} order by c_location
 		asc
 	</select>
+	<select id="selectRN" resultType="model.Boss_count">
+		select * from boss_count
+		where rownum= 1
+		order by round desc,named desc
+	</select>
 	
 	
+	<update id="updateUserCarryCount" parameterType="model.User_table">
+		update user_table set  
+		carry_named=#{carry_named},
+		carry_time=#{carry_time},
+		carry=1
+		 where user_code=#{user_code}
+	</update>
 
 	<update id="updateDay">
 		update clan_date set day=day+1
 	</update>
 
 	<update id="updateCount" parameterType="String">
-		update user_table set cp_count=cp_count-1 where user_code=#{user}
+		update user_table 
+		set cp_count=cp_count-1,
+		carry_named=0,
+		carry_time=0,
+		carry=0
+		where user_code=#{user}
+	</update>
+		<update id="updateGateUser" parameterType="model.Gate_user_table">
+		update gate_user_table set user_name=#{user_name} where user_code=#{user_code}
+	</update>
+	<update id="updateGateCp" parameterType="String">
+		update gate_user_table set cp_count=cp_count-1 where user_code=#{user}
+	</update>
+	<update id="resetGateCp">
+		update gate_user_table set cp_count=3
 	</update>
 	<update id="resetCp">
 		update user_table set cp_count=3
@@ -104,7 +150,10 @@
 	<update id="resetCpUser" parameterType="String">
 		update user_table set cp_count=3 where user_code=#{user_code}
 	</update>
-
+	<update id="addCpUser" parameterType="String">
+		update user_table set cp_count=cp_count+1 where user_code=#{user_code}
+	</update>
+	
 	<delete id="resetBr">
 		delete from boss_reservation
 	</delete>
@@ -118,8 +167,20 @@
 		between to_date(#{startDate},'YYYY-MM-DD HH24:MI:SS') and
 		to_date(#{endDate},'YYYY-MM-DD HH24:MI:SS')
 	</delete>
+	
+	<delete  id="deleteDamgeOne" parameterType="model.Condition">
+		delete from boss_count where
+		user_code=#{user_code} and
+		named = #{named} and round=#{round} and
+		attack_date =#{attack_date}
+	</delete>
+	
 	<delete id="deleteUser" parameterType="String">
 		delete from user_table where user_name=#{user_name}
+	</delete>
+	
+	<delete id="deleteGateUser" parameterType="String">
+		delete from Gate_user_table where user_name=#{user_name}
 	</delete>
 	<delete id="deleteBossReserv"
 		parameterType="model.Boss_reservation">
@@ -129,5 +190,14 @@
 	</delete>
 	<delete id="deleteDate">
 		delete from clan_date
+	</delete>
+	<delete id="resetDmg">
+		delete from boss_count
+	</delete>
+	<delete id="deleteClanDate">
+		delete from clan_date
+	</delete>
+	<delete id="deleteBossReservAll" parameterType="String">
+		delete from boss_reservation where user_code=#{user_code}
 	</delete>
 </mapper>
