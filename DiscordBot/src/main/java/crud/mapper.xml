@@ -16,8 +16,7 @@
 	
 	<insert id="insertBossDamage" parameterType="model.Boss_count">
 		insert into boss_count values(
-		#{user_code}
-		,#{round},#{named},#{damage},#{next_time},#{attack_date}
+		#{user_code},#{round},#{named},#{next_time},#{attack_date}
 		)
 	</insert>
 	<insert id="insertReserv" parameterType="model.Boss_reservation">
@@ -67,7 +66,7 @@
 	<select id="selectTodayAllDamage"
 		parameterType="model.Condition" resultType="model.User_boss_count">
 		select u.user_name user_name,u.user_code user_code, c.round round,c.named
-		named,c.damage damage,c.next_time next_time,c.attack_date attack_date
+		named,c.next_time next_time,c.attack_date attack_date
 		from boss_count c,user_table u
 		where
 		u.user_code = c.user_code

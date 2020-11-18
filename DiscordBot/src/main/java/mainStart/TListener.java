@@ -10,7 +10,6 @@ import java.util.Date;
 import java.util.List;
 
 import crud.CrudProcess;
-import googleSheet.inputSheet;
 import model.Boss_count;
 import model.Boss_reservation;
 import model.Character_db;
@@ -20,7 +19,6 @@ import model.Gate_user_table;
 import model.User_boss_count;
 import model.User_table;
 import net.dv8tion.jda.core.EmbedBuilder;
-import net.dv8tion.jda.core.entities.Emote;
 import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.TextChannel;
@@ -29,8 +27,6 @@ import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
 
 public class TListener extends ListenerAdapter {
-
-	inputSheet sheet = new inputSheet();
 	static int day = 0;
 	static int round;
 	static int named;
@@ -331,17 +327,6 @@ public class TListener extends ListenerAdapter {
 				tc.sendMessage(emb.build()).queue();
 				return;
 			}
-			if (spmsg[0].equals("!딜량")) {
-				String user_code = "";
-				if (spmsg.length == 1) {
-					user_code = user.getAsMention();
-				} else {
-					user_code = spmsg[1];
-					user_code = user_code.replace("!", "");
-				}
-				serchDamage(user_code, crud, tc);
-				return;
-			}
 //			if (spmsg[0].equals("!오늘전체딜량")) {
 //				serchTodayDamage(crud, tc);
 //				return;
@@ -565,11 +550,6 @@ public class TListener extends ListenerAdapter {
 					user_table.setUser_code(user.getAsMention());
 					user_table = crud.selectUser(user_table);
 					crud.resetCpUser(user.getAsMention());
-					try {
-						sheet.deleteSheets(day, user_table.getUser_name());
-					} catch (IOException e) {
-						e.printStackTrace();
-					}
 					tc.sendMessage("오늘 넣으신 딜량이 초기화 되었어요!").queue();
 					return;
 				}
@@ -607,12 +587,11 @@ public class TListener extends ListenerAdapter {
 						return;
 					}
 					Boss_count lastbc = bc.get(bc.size() - 1);
-					Integer dmg = lastbc.getDamage();
 					Integer round = lastbc.getRound();
 					Integer named = lastbc.getNamed();
 					Integer next = lastbc.getNext_time();
 					String date = lastbc.getAttack_date();
-					c.setDamage(dmg);
+					
 					c.setNamed(named);
 					c.setRound(round);
 					c.setAttack_date(date);
@@ -620,14 +599,12 @@ public class TListener extends ListenerAdapter {
 					User_table user_table = new User_table();
 					user_table.setUser_code(user.getAsMention());
 					user_table = crud.selectUser(user_table);
-
 					try {
 						crud.deleteDamgeOne(c);
-						sheet.deleteSheets(day, user_table.getUser_name(), dmg, round, named);
 						if (next == 0) {
 							crud.addCpUser(user.getAsMention());
 						}
-					} catch (IOException e) {
+					} catch (Exception e) {
 						e.printStackTrace();
 					}
 					tc.sendMessage("방금전 입력한 딜량을 삭제했어요!").queue();
@@ -1031,315 +1008,9 @@ public class TListener extends ListenerAdapter {
 		tc.sendMessage(user_code + "씨! " + br.getRound() + "회차 " + br.getNamed() + "네임드 예약이 완료 되었습니다!").queue();
 	}
 
-	public void serchDamage(String user_code, CrudProcess crud, TextChannel tc) {
-		Calendar cal = Calendar.getInstance();
-		Calendar startDate = Calendar.getInstance();
-		Calendar endDate = Calendar.getInstance();
-		String startDateF = "";
-		String endDateF = "";
-		SimpleDateFormat smp = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		if (cal.get(Calendar.HOUR_OF_DAY) >= 5) {
-			startDate.set(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH), 5, 0, 0);
-			endDate.set(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH) + 1, 5, 0, 0);
-			startDateF = smp.format(new Date(startDate.getTimeInMillis()));
-			endDateF = smp.format(new Date(endDate.getTimeInMillis()));
+	
 
-		} else {
-			startDate.set(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH) - 1, 5, 0, 0);
-			endDate.set(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH), 5, 0, 0);
-			startDateF = smp.format(new Date(startDate.getTimeInMillis()));
-			endDateF = smp.format(new Date(endDate.getTimeInMillis()));
-		}
-		Condition c = new Condition();
-		c.setStartDate(startDateF);
-		c.setEndDate(endDateF);
-		c.setUser_code(user_code);
-		List<Boss_count> cp = crud.selectBossCount(c);
-		if (cp.size() == 0) {
-			tc.sendMessage(user_code + "님은 오늘 친 기록이 없습니다.").queue();
-			return;
-		}
-		String str = user_code + "님이 오늘 넣은 딜량은\r\n";
-		for (Boss_count userCp : cp) {
-			str = str + userCp.getRound() + "회차 " + userCp.getNamed() + "네임드 를 '" + userCp.getDamage() + "' 넣";
-			if (userCp.getNext_time() == 1) {
-				str += "고 이월 되었습니다.\r\n";
-			} else {
-				str += "었습니다.\r\n";
-			}
-		}
-		tc.sendMessage(str).queue();
-	}
 
-	public void serchMonthDamge(String user_code, CrudProcess crud, TextChannel tc) {
-		Calendar cal = Calendar.getInstance();
-		Calendar startDate = Calendar.getInstance();
-		Calendar endDate = Calendar.getInstance();
-		String startDateF = "";
-		String endDateF = "";
-		SimpleDateFormat smp = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		startDate.set(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), 0, 0, 0, 0);
-		endDate.set(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH) + 1, 0, 0, 0, 0);
-		startDateF = smp.format(new Date(startDate.getTimeInMillis()));
-		endDateF = smp.format(new Date(endDate.getTimeInMillis()));
-		Condition c = new Condition();
-		c.setStartDate(startDateF);
-		c.setEndDate(endDateF);
-		c.setUser_code(user_code);
-		List<Boss_count> damageList = crud.selectBossCount(c);
-		String str = "";
-		int[][] boss = new int[damageList.get(damageList.size() - 1).getRound()][5];
-		int[][] bossV = new int[damageList.get(damageList.size() - 1).getRound()][5];
-
-		for (Boss_count userCp : damageList) {
-			int score = userCp.getDamage();
-			if (userCp.getRound() <= 3) {
-				if (userCp.getNamed() == 1 || userCp.getNamed() == 2) {
-					score *= 1;
-				} else if (userCp.getNamed() == 4 || userCp.getNamed() == 3) {
-					score *= 1.3;
-				} else {
-					score *= 1.5;
-				}
-				boss[userCp.getRound() - 1][userCp.getNamed() - 1] = userCp.getDamage();
-				bossV[userCp.getRound() - 1][userCp.getNamed() - 1] = score;
-			}
-			if (userCp.getRound() <= 10 && userCp.getRound() >= 4) {
-				if (userCp.getNamed() == 1 || userCp.getNamed() == 2) {
-					score *= 1.4;
-				} else if (userCp.getNamed() == 4 || userCp.getNamed() == 3) {
-					score *= 1.8;
-				} else {
-					score *= 1.2;
-				}
-				boss[userCp.getRound() - 1][userCp.getNamed() - 1] = userCp.getDamage();
-				bossV[userCp.getRound() - 1][userCp.getNamed() - 1] = score;
-			}
-			if (userCp.getRound() >= 11) {
-				if (userCp.getNamed() == 1 || userCp.getNamed() == 2) {
-					score *= 2;
-				} else if (userCp.getNamed() == 4 || userCp.getNamed() == 3) {
-					score *= 2.5;
-				} else {
-					score *= 3;
-				}
-				boss[userCp.getRound() - 1][userCp.getNamed() - 1] = userCp.getDamage();
-				bossV[userCp.getRound() - 1][userCp.getNamed() - 1] = score;
-			}
-		}
-		int fullDamge = 0;
-		int[][] damge = new int[3][5];
-		for (int i = 0; i < boss.length; i++) {
-			for (int j = 0; j < boss[i].length; j++) {
-				if (i <= 2) {
-					damge[0][j] += boss[i][j];
-				} else if (i <= 9 || i >= 3) {
-					damge[1][j] += boss[i][j];
-				} else if (i >= 10) {
-					damge[3][j] += boss[i][j];
-				}
-				fullDamge += boss[i][j];
-			}
-		}
-		String[][] damageS = new String[3][5];
-		for (int i = 0; i < damge.length; i++) {
-			for (int j = 0; j < damge[i].length; j++) {
-				damageS[i][j] = String.format("%07d", damge[i][j]);
-			}
-		}
-
-		int fullDamgeV = 0;
-		int[][] damgeV = new int[3][5];
-		for (int i = 0; i < bossV.length; i++) {
-			for (int j = 0; j < bossV[i].length; j++) {
-				if (i <= 2) {
-					damgeV[0][j] += bossV[i][j];
-				} else if (i <= 9 || i >= 3) {
-					damgeV[1][j] += bossV[i][j];
-				} else if (i >= 10) {
-					damgeV[3][j] += bossV[i][j];
-				}
-				fullDamgeV += bossV[i][j];
-			}
-		}
-		String[][] damageSV = new String[3][5];
-		for (int i = 0; i < damgeV.length; i++) {
-			for (int j = 0; j < damgeV[i].length; j++) {
-				damageSV[i][j] = String.format("%07d", damgeV[i][j]);
-			}
-		}
-		str += user_code + "\r\n";
-		str += "=================배율미적용================\r\n";
-		str += "================1단계 총딜량================\r\n";
-		str += "  1네임드      2네임드      3네임드      4네임드      5네임드\r\n";
-		str += damageS[0][0] + "  " + damageS[0][1] + "  " + damageS[0][2] + "  " + damageS[0][3] + "  " + damageS[0][4]
-				+ "\r\n ";
-		str += "================2단계 총딜량================\r\n";
-		str += "  1네임드      2네임드      3네임드      4네임드      5네임드\r\n";
-		str += damageS[1][0] + "  " + damageS[1][1] + "  " + damageS[1][2] + "  " + damageS[1][3] + "  " + damageS[1][4]
-				+ "\r\n";
-		str += "================3단계 총딜량================\r\n";
-		str += "  1네임드      2네임드      3네임드      4네임드      5네임드\r\n";
-		str += damageS[2][0] + "  " + damageS[2][1] + "  " + damageS[2][2] + "  " + damageS[2][3] + "  " + damageS[2][4]
-				+ "\r\n ";
-		str += "이번달 총 딜 : " + fullDamgeV + "점 입니다.\r\n \r\n";
-
-		str += "==================배율적용=================\r\n";
-		str += "================1단계 총딜량================\r\n";
-		str += "  1네임드      2네임드      3네임드      4네임드      5네임드\r\n";
-		str += damageSV[0][0] + "  " + damageSV[0][1] + "  " + damageSV[0][2] + "  " + damageSV[0][3] + "  "
-				+ damageSV[0][4] + "\r\n ";
-		str += "================2단계 총딜량================\r\n";
-		str += "  1네임드      2네임드      3네임드      4네임드      5네임드\r\n";
-		str += damageSV[1][0] + "  " + damageSV[1][1] + "  " + damageSV[1][2] + "  " + damageSV[1][3] + "  "
-				+ damageSV[1][4] + "\r\n";
-		str += "================3단계 총딜량================\r\n";
-		str += "  1네임드      2네임드      3네임드      4네임드      5네임드\r\n";
-		str += damageSV[2][0] + "  " + damageSV[2][1] + "  " + damageSV[2][2] + "  " + damageSV[2][3] + "  "
-				+ damageSV[2][4] + "\r\n ";
-		str += "이번달 배율 적용 총 딜 : " + fullDamge + "점 입니다.";
-
-		tc.sendMessage(str).queue();
-	}
-
-	public void serchMonthDamgeAll(String user_code, CrudProcess crud, TextChannel tc) {
-		Calendar cal = Calendar.getInstance();
-		Calendar startDate = Calendar.getInstance();
-		Calendar endDate = Calendar.getInstance();
-		String startDateF = "";
-		String endDateF = "";
-		SimpleDateFormat smp = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		startDate.set(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), 0, 0, 0, 0);
-		endDate.set(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH) + 1, 0, 0, 0, 0);
-		startDateF = smp.format(new Date(startDate.getTimeInMillis()));
-		endDateF = smp.format(new Date(endDate.getTimeInMillis()));
-		Condition c = new Condition();
-		c.setStartDate(startDateF);
-		c.setEndDate(endDateF);
-		c.setUser_code(user_code);
-		List<Boss_count> damageList = crud.selectBossCount(c);
-		String str = "";
-		str += user_code + "\r\n";
-		int[][] boss = new int[damageList.get(damageList.size() - 1).getRound()][5];
-		int[][] bossV = new int[damageList.get(damageList.size() - 1).getRound()][5];
-
-		for (Boss_count userCp : damageList) {
-			int score = userCp.getDamage();
-			if (userCp.getRound() <= 3) {
-				if (userCp.getNamed() == 1 || userCp.getNamed() == 2) {
-					score *= 1;
-				} else if (userCp.getNamed() == 4 || userCp.getNamed() == 3) {
-					score *= 1.3;
-				} else {
-					score *= 1.5;
-				}
-				boss[userCp.getRound() - 1][userCp.getNamed() - 1] = userCp.getDamage();
-				bossV[userCp.getRound() - 1][userCp.getNamed() - 1] = score;
-			}
-			if (userCp.getRound() <= 10 && userCp.getRound() >= 4) {
-				if (userCp.getNamed() == 1 || userCp.getNamed() == 2) {
-					score *= 1.4F;
-				} else if (userCp.getNamed() == 4 || userCp.getNamed() == 3) {
-					score *= 1.8F;
-				} else {
-					score *= 1.2F;
-				}
-				boss[userCp.getRound() - 1][userCp.getNamed() - 1] = userCp.getDamage();
-				bossV[userCp.getRound() - 1][userCp.getNamed() - 1] = score;
-			}
-			if (userCp.getRound() >= 11) {
-				if (userCp.getNamed() == 1 || userCp.getNamed() == 2) {
-					score *= 2;
-				} else if (userCp.getNamed() == 4 || userCp.getNamed() == 3) {
-					score *= 2.5F;
-				} else {
-					score *= 3;
-				}
-				boss[userCp.getRound() - 1][userCp.getNamed() - 1] = userCp.getDamage();
-				bossV[userCp.getRound() - 1][userCp.getNamed() - 1] = score;
-			}
-			str = str + userCp.getRound() + "회차 " + userCp.getNamed() + "네임드 를 '" + userCp.getDamage() + "' 넣";
-			if (userCp.getNext_time() == 1) {
-				str += "고 이월 되었습니다.\r\n";
-			} else {
-				str += "었습니다.\r\n";
-			}
-		}
-		int fullDamge = 0;
-		int[][] damge = new int[3][5];
-		for (int i = 0; i < boss.length; i++) {
-			for (int j = 0; j < boss[i].length; j++) {
-				if (i <= 2) {
-					damge[0][j] += boss[i][j];
-				} else if (i <= 9 || i >= 3) {
-					damge[1][j] += boss[i][j];
-				} else if (i >= 10) {
-					damge[2][j] += boss[i][j];
-				}
-				fullDamge += boss[i][j];
-			}
-		}
-		String[][] damageS = new String[3][5];
-		for (int i = 0; i < damge.length; i++) {
-			for (int j = 0; j < damge[i].length; j++) {
-				damageS[i][j] = String.format("%07d", damge[i][j]);
-			}
-		}
-
-		int fullDamgeV = 0;
-		int[][] damgeV = new int[3][5];
-		for (int i = 0; i < bossV.length; i++) {
-			for (int j = 0; j < bossV[i].length; j++) {
-				if (i <= 2) {
-					damgeV[0][j] += bossV[i][j];
-				} else if (i <= 9 || i >= 3) {
-					damgeV[1][j] += bossV[i][j];
-				} else if (i >= 10) {
-					damgeV[2][j] += bossV[i][j];
-				}
-				fullDamgeV += bossV[i][j];
-			}
-		}
-		String[][] damageSV = new String[3][5];
-		for (int i = 0; i < damgeV.length; i++) {
-			for (int j = 0; j < damgeV[i].length; j++) {
-				damageSV[i][j] = String.format("%07d", damgeV[i][j]);
-			}
-		}
-
-		str += "=================배율미적용================\r\n";
-		str += "================1단계 총딜량================\r\n";
-		str += "  1네임드      2네임드      3네임드      4네임드      5네임드\r\n";
-		str += damageS[0][0] + "  " + damageS[0][1] + "  " + damageS[0][2] + "  " + damageS[0][3] + "  " + damageS[0][4]
-				+ "\r\n ";
-		str += "================2단계 총딜량================\r\n";
-		str += "  1네임드      2네임드      3네임드      4네임드      5네임드\r\n";
-		str += damageS[1][0] + "  " + damageS[1][1] + "  " + damageS[1][2] + "  " + damageS[1][3] + "  " + damageS[1][4]
-				+ "\r\n";
-		str += "================3단계 총딜량================\r\n";
-		str += "  1네임드      2네임드      3네임드      4네임드      5네임드\r\n";
-		str += damageS[2][0] + "  " + damageS[2][1] + "  " + damageS[2][2] + "  " + damageS[2][3] + "  " + damageS[2][4]
-				+ "\r\n ";
-		str += "이번달 총 딜 : " + fullDamge + "점 입니다.\r\n \r\n";
-
-		str += "==================배율적용=================\r\n";
-		str += "================1단계 총딜량================\r\n";
-		str += "  1네임드      2네임드      3네임드      4네임드      5네임드\r\n";
-		str += damageSV[0][0] + "  " + damageSV[0][1] + "  " + damageSV[0][2] + "  " + damageSV[0][3] + "  "
-				+ damageSV[0][4] + "\r\n ";
-		str += "================2단계 총딜량================\r\n";
-		str += "  1네임드      2네임드      3네임드      4네임드      5네임드\r\n";
-		str += damageSV[1][0] + "  " + damageSV[1][1] + "  " + damageSV[1][2] + "  " + damageSV[1][3] + "  "
-				+ damageSV[1][4] + "\r\n";
-		str += "================3단계 총딜량================\r\n";
-		str += "  1네임드      2네임드      3네임드      4네임드      5네임드\r\n";
-		str += damageSV[2][0] + "  " + damageSV[2][1] + "  " + damageSV[2][2] + "  " + damageSV[2][3] + "  "
-				+ damageSV[2][4] + "\r\n ";
-		str += "이번달 배율 적용 총 딜 : " + fullDamgeV + "점 입니다.";
-
-		tc.sendMessage(str).queue();
-
-	}
 
 	public void serchTodayDamage(CrudProcess crud, TextChannel tc) {
 		Calendar cal = Calendar.getInstance();

@@ -6,7 +6,6 @@ public class Condition {
 	private String user_code;
 	private Integer round;
 	private Integer named;
-	private Integer damage;
 	private Integer next_time;
 	private String attack_date;
 	public Integer getRound() {
@@ -33,12 +32,7 @@ public class Condition {
 	public void setAttack_date(String attack_date) {
 		this.attack_date = attack_date;
 	}
-	public void setDamage(Integer damage) {
-		this.damage = damage;
-	}
-	public Integer getDamage() {
-		return damage;
-	}
+
 	public String getEndDate() {
 		return endDate;
 	}

@@ -23,7 +23,7 @@ public class Main {
 		JDABuilder jb = new JDABuilder(AccountType.BOT);
 		jb.setAutoReconnect(true);
 		jb.setStatus(OnlineStatus.DO_NOT_DISTURB);
-		jb.setToken("NjkzODQyMDE0MTI2NDczMjM3.");//Xu92tQ.Sv1C54Uxz6ywBRNLPgu94SqwPeM
+		jb.setToken("NjkzODQyMDE0MTI2NDczMjM3.Xu92tQ.Sv1C54Uxz6ywBRNLPgu94SqwPeM");//
 		jb.addEventListener(new TListener());
 		jb.setGame(Game.of(GameType.DEFAULT, "귀여운 막둥이 일"));
 		jb.setStatus(OnlineStatus.ONLINE);
