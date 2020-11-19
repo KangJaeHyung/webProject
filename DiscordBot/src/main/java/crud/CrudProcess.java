@@ -491,7 +491,7 @@ public class CrudProcess {
 	}
 	
 	
-	public Integer updateUserCarryCount(Integer carry_time) {
+	public Integer updateUserCarryCount(User_table carry_time) {
 		SqlSession ss = getSession();
 		Integer cs = 0;
 		try {

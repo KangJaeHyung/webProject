@@ -2,7 +2,6 @@ package mainStart;
 
 import java.awt.Color;
 import java.io.File;
-import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -16,15 +15,15 @@ import model.Character_db;
 import model.Clan_date;
 import model.Condition;
 import model.Gate_user_table;
-import model.User_boss_count;
 import model.User_table;
-import net.dv8tion.jda.core.EmbedBuilder;
-import net.dv8tion.jda.core.entities.Guild;
-import net.dv8tion.jda.core.entities.Message;
-import net.dv8tion.jda.core.entities.TextChannel;
-import net.dv8tion.jda.core.entities.User;
-import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
-import net.dv8tion.jda.core.hooks.ListenerAdapter;
+import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.entities.TextChannel;
+import net.dv8tion.jda.api.entities.User;
+import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import oracle.net.aso.b;
 
 public class TListener extends ListenerAdapter {
 	static int day = 0;
@@ -40,48 +39,11 @@ public class TListener extends ListenerAdapter {
 		CrudProcess crud = new CrudProcess();
 		Guild guild = event.getGuild();
 		String message = msg.getContentRaw();
-
-//		System.out.println(
-//				"체널:" + tc.getName() + "(" + tc.getId() + ")," + tc.getType() + "," + user.getName() + ":" + message);
 		if (user.isBot())
 			return;
 		if (message.length() < 1) {
 			return;
 		}
-
-//		if (spmsg[0].equals("!캐릭터DB복사")) {
-//		List<Character_db> ul = crud.selectCharAll();
-//		System.out.println(ul.size());
-//		for (Character_db bc : ul) {
-//			String str = "insert into character_db values(";
-//			str += "'" + bc.getC_name() + "'" + ",\r\n";
-//			str += "'" + bc.getC_keyword() + "'" + ",\r\n";
-//			str += bc.getC_age() + ",\r\n";
-//			str += bc.getC_height() + ",\r\n";
-//			str += bc.getC_weight() + ",\r\n";
-//			str += "'" +bc.getC_birthday() + "'" + ",\r\n";
-//			str += "'" +bc.getC_guild() + "'" + ",\r\n";
-//			str += "'" +bc.getC_position() + "'" + ",\r\n";
-//			str += bc.getC_location() + ",\r\n";
-//			str += "'" +bc.getC_attack_type() + "'" + ",\r\n";
-//			str += "'" +bc.getC_class() + "'" + ",\r\n";
-//			str += bc.getC_rare() + ",\r\n";
-//			str += "'" +bc.getC_voice() + "'" + ",\r\n";
-//			str += "'" +bc.getC_rare6() + "'" + ",\r\n";
-//			str += "'" +bc.getC_equipment() + "'" + ",\r\n";
-//			str += "'" +bc.getC_ub() + "'" + ",\r\n";
-//			str += "'" +bc.getC_skill1() + "'" + ",\r\n";
-//			str += "'" +bc.getC_skill2() + "'" + ",\r\n";
-//			str += "'" +bc.getC_exSkill() + "'" + ",\r\n";
-//			str += "'" +bc.getC_image() + "'" + ",\r\n";
-//			str += "'" +bc.getC_sub_image() + "'" + "\r\n"
-//					+ ");"
-//					+ "\r\n\r\n";
-//			System.out.println(str);
-//		}
-//		return;
-//	}
-//
 
 		if (spmsg[0].equals("!개발자")) {
 			tc.sendMessage("저를 만드신분은 Fuko에요.").queue();
@@ -189,14 +151,6 @@ public class TListener extends ListenerAdapter {
 
 		// 아카리뿌
 		if (guild.getId().equals("600296449603010563")) {
-//		List<Emote> emo = msg.getEmotes();
-//		if (emo.size() == 1) {
-//			EmbedBuilder emb = new EmbedBuilder();
-//			emb.setAuthor(user.getDiscriminator(), user.getAvatarUrl());
-//			emb.setColor(Color.yellow);
-//			emb.setImage(emo.get(0).getImageUrl());
-//			tc.sendMessage(emb.build()).queue();
-//		}
 			if (spmsg[0].equals("!명령어")) {
 				EmbedBuilder emb = new EmbedBuilder();
 				emb.setColor(Color.yellow);
@@ -207,16 +161,17 @@ public class TListener extends ListenerAdapter {
 				emb.addField("!계산2 [자신이넣은딜량]", "풀이월받으려면 남아있는 보스의 hp", false);
 				emb.addField("!계산3 [보스의남은hp]", "풀이월받으려면 넣어야할 딜량", false);
 				emb.addField("!cp확인", "오늘 남은 cp를 보여드립니다.", false);
-				emb.addField("!딜량 [@유저명]", "유저명에 아무것도 입력안하면 오늘 내가 넣은 딜량을 보여드립니다. 넣을시 해당유저의 딜량을 보여드립니다.", false);
+				emb.addField("!확인 [@맨션]", "오늘 자신이 친 이력확인 뒤에 맨션 붙일시 그사람 확인", false);
+				emb.addField("!확인", "현재 이월자 확인", false);
 				emb.addField("!호출 [회차][네임드]", "해당 회차 네임드를 예약한 유저를 호출합니다", false);
 				emb.addField("!예약확인 [회차] [네임드]", "회차랑 네임드 안적을시 모든 예약 정보가 나옵니다.", false);
 				emb.addField("!예약 [회차] [네임드] [예상데미지] [이월]", "회차랑 네임드는 필수로 적고 데미지랑 이월은 필수가 아닙니다.", false);
 				emb.addField("!예약취소 [회차] [네임드]", "해당회차 예약 취소. 회차랑 네임드 적지 않을시 전체취소", false);
 				emb.addField("===3타완료보고서에 써주세요.===", "", false);
-				emb.addField("!입력 [회차] [네임드] [딜량] [이월]", "자신이 해당 회차 네임드에 넣은 딜량을 DB에 입력합니다. 마무리 했을 경우 이월이라고 입력하면 됩니다.",
+				emb.addField("!입력 [회차] [네임드] [이월시간]", "자신이 해당 회차 네임드에 넣은 딜량을 DB에 입력합니다. 마무리 했을 경우 이월시간을 입력하면 됩니다.",
 						false);
-				emb.addField("!대리입력 [유저맨션] [회차] [네임드] [딜량] [이월]",
-						"해당 유저의 회차 네임드에 넣은 딜량을 DB에 입력합니다. 마무리 했을 경우 이월이라고 입력하면 됩니다.", false);
+				emb.addField("!대리입력 [유저맨션] [회차] [네임드] [이월시간]",
+						"해당 유저의 회차 네임드에 넣은 딜량을 DB에 입력합니다. 마무리 했을 경우 이월시간을 입력하면 됩니다.", false);
 				emb.addField("!전체삭제", "오늘 자신이 넣은 데미지 전체를 삭제합니다.", false);
 				emb.addField("!최근삭제", "방금 자신이 입력한 데미지를 삭제합니다.", false);
 				tc.sendMessage(emb.build()).queue();
@@ -303,6 +258,23 @@ public class TListener extends ListenerAdapter {
 				tc.sendMessage(user_name).queue();
 				return;
 			}
+			if (spmsg[0].equals("!이월")) {
+				List<User_table> userList = crud.selectUserList();
+				String user_name = "```\r\n";
+				user_name = user_name + "**이월자 목록**\r\n";
+				for (User_table userL : userList) {
+					if (userL.getCarry() == null || userL.getCarry() == 0) {
+
+					} else {
+						user_name = user_name + userL.getUser_name() + ":" + userL.getCarry_named() + "네임드 "
+								+ userL.getCarry_time() + "초" + "\r\n";
+					}
+				}
+				user_name = user_name + "```";
+				tc.sendMessage(user_name).queue();
+				return;
+			}
+
 			if (spmsg[0].equals("!cp") || spmsg[0].equals("!CP")) {
 				List<User_table> userList = crud.selectUserList();
 				EmbedBuilder emb = new EmbedBuilder();
@@ -312,7 +284,7 @@ public class TListener extends ListenerAdapter {
 				for (User_table us : userList) {
 					if (us.getCp_count() != 0) {
 
-						if (us.getCarry() == null||us.getCarry()==0) {
+						if (us.getCarry() == null || us.getCarry() == 0) {
 							emb.addField(us.getUser_name(), us.getCp_count() + "타", true);
 							cp += us.getCp_count();
 						} else {
@@ -497,6 +469,16 @@ public class TListener extends ListenerAdapter {
 				tc.sendMessage("지금 클랜배틀은" + day + "일차입니다!").queue();
 				return;
 			}
+			if (spmsg[0].equals("!확인")) {
+				if (spmsg.length == 1) {
+					serchBossCount(user.getAsMention(),crud,tc);
+				}else {
+					String user_code = spmsg[1].replace("!", "");
+					serchBossCount(user_code,crud,tc);
+				}
+				return;
+			}
+
 			if (tc.getName().equals("3타완료보고")) {
 				if (spmsg[0].equals("!입력")) {
 					if (spmsg.length < 3 || spmsg.length > 4) {
@@ -511,10 +493,12 @@ public class TListener extends ListenerAdapter {
 					} else {
 						String user_code = spmsg[1];
 						user_code = user_code.replace("!", "");
-						for (int i = 1; i < spmsg.length - 1; i++) {
-							spmsg[i] = spmsg[i + 1];
+						String newSpmsg[] = new String[spmsg.length - 1];
+						newSpmsg[0] = spmsg[0];
+						for (int i = 2; i < spmsg.length; i++) {
+							newSpmsg[i - 1] = spmsg[i];
 						}
-						inputDamage(spmsg, tc, user_code, crud);
+						inputDamage(newSpmsg, tc, user_code, crud);
 					}
 				}
 
@@ -550,7 +534,9 @@ public class TListener extends ListenerAdapter {
 					user_table.setUser_code(user.getAsMention());
 					user_table = crud.selectUser(user_table);
 					crud.resetCpUser(user.getAsMention());
+
 					tc.sendMessage("오늘 넣으신 딜량이 초기화 되었어요!").queue();
+
 					return;
 				}
 				if (spmsg[0].equals("!최근삭제")) {
@@ -591,7 +577,7 @@ public class TListener extends ListenerAdapter {
 					Integer named = lastbc.getNamed();
 					Integer next = lastbc.getNext_time();
 					String date = lastbc.getAttack_date();
-					
+
 					c.setNamed(named);
 					c.setRound(round);
 					c.setAttack_date(date);
@@ -638,6 +624,7 @@ public class TListener extends ListenerAdapter {
 						day = (int) (cha / (24 * 60 * 60 * 1000)) + 1;
 					}
 					Clan_date cd = new Clan_date();
+					cd.setDay(day);
 					cd.setEnd_day(end);
 					cd.setStart_day(start);
 					crud.insertClanDate(cd);
@@ -1008,11 +995,15 @@ public class TListener extends ListenerAdapter {
 		tc.sendMessage(user_code + "씨! " + br.getRound() + "회차 " + br.getNamed() + "네임드 예약이 완료 되었습니다!").queue();
 	}
 
-	
-
-
-
-	public void serchTodayDamage(CrudProcess crud, TextChannel tc) {
+	private void serchBossCount(String user_code, CrudProcess crud, TextChannel tc) {
+		User_table user=new User_table();
+		user.setUser_code(user_code);
+		user = crud.selectUser(user);
+		if (user == null || user.getUser_code() == null || user.getUser_code().equals("")) {
+			tc.sendMessage(user_code + "등록되지 않은 유저에요! 일단 유저 등록부터 해보죠!").queue();
+			return;
+		}
+		Condition c = new Condition();
 		Calendar cal = Calendar.getInstance();
 		Calendar startDate = Calendar.getInstance();
 		Calendar endDate = Calendar.getInstance();
@@ -1031,28 +1022,19 @@ public class TListener extends ListenerAdapter {
 			startDateF = smp.format(new Date(startDate.getTimeInMillis()));
 			endDateF = smp.format(new Date(endDate.getTimeInMillis()));
 		}
-		Condition c = new Condition();
 		c.setStartDate(startDateF);
 		c.setEndDate(endDateF);
-		List<User_boss_count> damageList = crud.selectTodayAllDamage(c);
-		String str = "=====오늘전체딜량=====";
-		String name = "";
-		for (User_boss_count list : damageList) {
-			if (!name.equals(list.getUser_name())) {
-				name = list.getUser_name();
-				tc.sendMessage(str).queue();
-				str = "";
+		c.setUser_code(user_code);
+		List<Boss_count> bcList = crud.selectBossCount(c);
+		String str = user_code + "씨의 오늘histroy\r\n";
+		for (Boss_count bc : bcList) {
+			if (bc.getNext_time() == null || bc.getNext_time() == 0) {
+				str += +bc.getRound() + "회차 " + bc.getNamed() + "네임드 \r\n";
+			}else {
+				str += +bc.getRound() + "회차 " + bc.getNamed() + "네임드 [이월] \r\n";
 			}
-			str += list.getUser_name() + "님 " + list.getRound() + "회차 " + list.getNamed() + "네임드 를 '" + list.getDamage()
-					+ "' 넣";
-			if (list.getNext_time() == 1) {
-				str += "고 이월 되었습니다.\r\n";
-			} else {
-				str += "었습니다.\r\n";
-			}
-
 		}
-
+		tc.sendMessage(str).queue();
 	}
 
 	public void inputDamage(String[] spmsg, TextChannel tc, String user_code, CrudProcess crud) {
@@ -1063,7 +1045,7 @@ public class TListener extends ListenerAdapter {
 		tc.sendMessage(user_code + "데미지 등록중이에요! 잠시만기달려주세요!").queue();
 		int size = spmsg.length;
 		for (int i = 0; i < size; i++) {
-			if (spmsg[i].equals("") || spmsg[i] == null) {
+			if (spmsg[i] == null || spmsg[i].equals("")) {
 				tc.sendMessage("등록 실패했어요.. 띄어쓰기를 다시 한 번 확인 해 주시겠어요?").queue();
 				return;
 			}
@@ -1106,7 +1088,7 @@ public class TListener extends ListenerAdapter {
 		try {
 			if (spmsg.length == 4) {
 				carry_time = Integer.parseInt(spmsg[3]);
-				next_time=1;
+				next_time = 1;
 			}
 		} catch (NumberFormatException e) {
 			tc.sendMessage("'" + spmsg[3] + "' 부분이 잘못된 형식입니다.").queue();
@@ -1121,10 +1103,15 @@ public class TListener extends ListenerAdapter {
 		boss_count.setNext_time(next_time);
 		boss_count.setRound(round);
 		boss_count.setUser_code(user_code);
+		User_table usert = new User_table();
+		usert.setUser_code(user_code);
+		usert.setCarry(1);
+		usert.setCarry_named(named);
+		usert.setCarry_time(carry_time);
 		try {
 			crud.insertBossDamage(boss_count);
 			if (next_time == 1) {
-				crud.updateUserCarryCount(carry_time);
+				crud.updateUserCarryCount(usert);
 			} else {
 				crud.updateCount(user_code);
 			}
@@ -1141,7 +1128,11 @@ public class TListener extends ListenerAdapter {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		tc.sendMessage(round + "회차 " + named + "네임드 " + " 입력이  완료되었어요!").queue();
+		if (next_time == 1) {
+			tc.sendMessage(round + "회차 " + named + "네임드 이월 " + carry_time + "초 입력이  완료되었어요!").queue();
+		} else {
+			tc.sendMessage(round + "회차 " + named + "네임드 " + " 입력이  완료되었어요!").queue();
+		}
 		if (next_time == 0) {
 			if (selUser.getCp_count() == 1) {
 				tc.sendMessage("와! " + selUser.getUser_code() + "씨는 오늘 3번 다 치셨군요! 오늘 수고하셨습니다!").queue();

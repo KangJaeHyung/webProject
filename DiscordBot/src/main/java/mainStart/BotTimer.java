@@ -7,7 +7,7 @@ import java.util.Date;
 
 import crud.CrudProcess;
 import model.Clan_date;
-import net.dv8tion.jda.core.JDA;
+import net.dv8tion.jda.api.JDA;
 
 public class BotTimer extends Thread {
 	CrudProcess crud;

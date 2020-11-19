@@ -26,7 +26,7 @@
 	</insert>
 	<insert id="insertClanDate" parameterType="model.Clan_date">
 		insert into Clan_date values(
-		0,#{start_day},#{end_day}
+		#{day},#{start_day},#{end_day}
 		)
 	</insert>
 
@@ -116,9 +116,9 @@
 	
 	<update id="updateUserCarryCount" parameterType="model.User_table">
 		update user_table set  
+		carry=1,
 		carry_named=#{carry_named},
-		carry_time=#{carry_time},
-		carry=1
+		carry_time=#{carry_time}
 		 where user_code=#{user_code}
 	</update>
 
@@ -147,10 +147,18 @@
 		update user_table set cp_count=3
 	</update>
 	<update id="resetCpUser" parameterType="String">
-		update user_table set cp_count=3 where user_code=#{user_code}
+		update user_table set cp_count=3,
+		carry_named=0,
+		carry_time=0,
+		carry=0
+		 where user_code=#{user_code}
 	</update>
 	<update id="addCpUser" parameterType="String">
-		update user_table set cp_count=cp_count+1 where user_code=#{user_code}
+		update user_table set cp_count=cp_count+1
+		carry_named=0,
+		carry_time=0,
+		carry=0
+		where user_code=#{user_code}
 	</update>
 	
 	<delete id="resetBr">
