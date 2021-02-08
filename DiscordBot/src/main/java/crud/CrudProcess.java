@@ -14,6 +14,7 @@ import model.Character_db;
 import model.Clan_date;
 import model.Condition;
 import model.Gate_user_table;
+import model.NotParti;
 import model.User_boss_count;
 import model.User_table;
 
@@ -280,6 +281,23 @@ public class CrudProcess {
 		return cs;
 	}
 	
+	public Integer insertNoparti(NotParti cd) {
+		SqlSession ss = getSession();
+		Integer cs = 0;
+		try {
+			String query = NAMESPACE + ".insertNoparti";
+			cs = ss.insert(query, cd);
+			if (cs > 0) {
+				ss.commit();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			ss.close();
+		}
+		return cs;
+	}
+	
 	
 	public Integer deleteClanDate() {
 		SqlSession ss = getSession();
@@ -474,7 +492,7 @@ public class CrudProcess {
 		return cs;
 	}
 
-	public Integer updateGateCp(String user) {
+	public Integer updateGateCp(Gate_user_table user) {
 		SqlSession ss = getSession();
 		Integer cs = 0;
 		try {

@@ -5,7 +5,7 @@
 <mapper namespace="crud.mapper">
 	<insert id="insertUser" parameterType="model.User_table">
 		insert into user_table values(
-		#{user_code},#{user_name} ,#{cp_count}
+		#{user_code},#{user_name} ,#{cp_count},0,0,0
 		)
 	</insert>
 	<insert id="insertGateUser" parameterType="model.Gate_user_table">
@@ -29,7 +29,13 @@
 		#{day},#{start_day},#{end_day}
 		)
 	</insert>
+	<insert id="insertNoparti" parameterType="model.NotParti">
+		insert into notparti values(
+			#{parti_date},#{noparti}
+		)
+	</insert>
 
+	
 
 	<select id="selectDay" resultType="model.Clan_date">
 		select * from clan_date
@@ -114,6 +120,8 @@
 	</select>
 	
 	
+	
+	
 	<update id="updateUserCarryCount" parameterType="model.User_table">
 		update user_table set  
 		carry=1,
@@ -137,8 +145,8 @@
 		<update id="updateGateUser" parameterType="model.Gate_user_table">
 		update gate_user_table set user_name=#{user_name} where user_code=#{user_code}
 	</update>
-	<update id="updateGateCp" parameterType="String">
-		update gate_user_table set cp_count=cp_count-1 where user_code=#{user}
+	<update id="updateGateCp" parameterType="model.Gate_user_table">
+		update gate_user_table set cp_count=#{cp_count} where user_code=#{user_code}
 	</update>
 	<update id="resetGateCp">
 		update gate_user_table set cp_count=3
@@ -154,12 +162,16 @@
 		 where user_code=#{user_code}
 	</update>
 	<update id="addCpUser" parameterType="String">
-		update user_table set cp_count=cp_count+1
+		update user_table set cp_count=cp_count+1,
 		carry_named=0,
 		carry_time=0,
 		carry=0
 		where user_code=#{user_code}
 	</update>
+	
+	
+	
+	
 	
 	<delete id="resetBr">
 		delete from boss_reservation

@@ -18,17 +18,18 @@ import model.Gate_user_table;
 import model.User_table;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
-import oracle.net.aso.b;
 
 public class TListener extends ListenerAdapter {
 	static int day = 0;
 	static int round;
 	static int named;
+	static int dice = 0;
 
 	@Override
 	public void onMessageReceived(MessageReceivedEvent event) {
@@ -39,6 +40,23 @@ public class TListener extends ListenerAdapter {
 		CrudProcess crud = new CrudProcess();
 		Guild guild = event.getGuild();
 		String message = msg.getContentRaw();
+
+		if (spmsg[0].equals("!권한")&&user.getAsMention().equals("<@363657198347485186>")) {
+			String mem=spmsg[1].replace("<", "").replace(">", "").replace("!", "").replace("@", "");
+			Member member= guild.getMemberById(mem);
+			System.out.println(member.getRoles());
+			guild.addRoleToMember(member, guild.getRoles().get(5));
+			System.out.println(member.getRoles());
+			tc.sendMessage("권한을 드렸습니다.").queue();
+			return;
+		}
+		if(spmsg[0].equals("!권한해제")&&user.getAsMention().equals("<@363657198347485186>")) {
+			String mem=spmsg[1].replace("<", "").replace(">", "").replace("!", "").replace("@", "");
+			guild.removeRoleFromMember(guild.getMemberById(mem), guild.getRoles().get(5));
+			tc.sendMessage("권한을 삭제했습니다.").queue();
+			return;
+		}
+
 		if (user.isBot())
 			return;
 		if (message.length() < 1) {
@@ -142,9 +160,16 @@ public class TListener extends ListenerAdapter {
 			return;
 		}
 		if (spmsg[0].equals("!주사위")) {
-			int rnd = (int) (Math.random() * 101);
-			tc.sendMessage("와!" + user.getAsMention() + "씨의 주사위는 " + rnd + "에요.").queue();
-			return;
+			if (user.getAsMention().equals("<@363657198347485186>")) {
+				int rnd = (int) (Math.random() * (101 - dice)) + dice;
+				tc.sendMessage("와!" + user.getAsMention() + "씨의 주사위는 " + rnd + "에요.").queue();
+				return;
+			} else {
+				int rnd = (int) (Math.random() * 101);
+				tc.sendMessage("와!" + user.getAsMention() + "씨의 주사위는 " + rnd + "에요.").queue();
+				dice=rnd;
+				return;
+			}
 		}
 
 		// 전국리마협회 가테지부
@@ -471,10 +496,10 @@ public class TListener extends ListenerAdapter {
 			}
 			if (spmsg[0].equals("!확인")) {
 				if (spmsg.length == 1) {
-					serchBossCount(user.getAsMention(),crud,tc);
-				}else {
+					serchBossCount(user.getAsMention(), crud, tc);
+				} else {
 					String user_code = spmsg[1].replace("!", "");
-					serchBossCount(user_code,crud,tc);
+					serchBossCount(user_code, crud, tc);
 				}
 				return;
 			}
@@ -601,6 +626,7 @@ public class TListener extends ListenerAdapter {
 			}
 
 			if (tc.getName().equals("커맨드") && user.getAsMention().equals("<@363657198347485186>")) {
+
 				if (spmsg[0].equals("!날짜지정")) {
 					if (spmsg.length < 3) {
 						tc.sendMessage("잘못된 형식입니다.").queue();
@@ -779,15 +805,34 @@ public class TListener extends ListenerAdapter {
 				return;
 			}
 			if (spmsg[0].equals("!입력")) {
-				inputGate(user.getAsMention(), crud, tc);
+				try {
+					if (spmsg.length == 1) {
+						inputGate(user.getAsMention(), crud, tc, 1);
+					} else {
+						inputGate(user.getAsMention(), crud, tc, Integer.parseInt(spmsg[1]));
+					}
+				} catch (NumberFormatException e) {
+					tc.sendMessage("오류가 발생했어요 다시 입력해주세요.").queue();
+				}
 			}
 			if (spmsg[0].equals("!대리입력")) {
-				if (spmsg.length == 2) {
-					if (spmsg[1].charAt(0) == '<' && spmsg[1].charAt(spmsg[1].length() - 1) == '>') {
-						inputGate(spmsg[1].replace("!", ""), crud, tc);
-					} else {
-						inputGateNick(spmsg[1], crud, tc);
+				try {
+					if (spmsg.length == 2) {
+						if (spmsg[1].charAt(0) == '<' && spmsg[1].charAt(spmsg[1].length() - 1) == '>') {
+							inputGate(spmsg[1].replace("!", ""), crud, tc, 0);
+						} else {
+							inputGateNick(spmsg[1], crud, tc, 1);
+						}
+					} else if (spmsg.length == 3) {
+						if (spmsg[1].charAt(0) == '<' && spmsg[1].charAt(spmsg[1].length() - 1) == '>') {
+
+							inputGate(spmsg[1].replace("!", ""), crud, tc, Integer.parseInt(spmsg[2]));
+						} else {
+							inputGateNick(spmsg[1], crud, tc, Integer.parseInt(spmsg[2]));
+						}
 					}
+				} catch (NumberFormatException e) {
+					tc.sendMessage("오류가 발생했어요 다시 입력해주세요.").queue();
 				}
 			}
 
@@ -930,20 +975,25 @@ public class TListener extends ListenerAdapter {
 		tc.sendMessage(str).queue();
 	}
 
-	private void inputGate(String user_code, CrudProcess crud, TextChannel tc) {
+	private void inputGate(String user_code, CrudProcess crud, TextChannel tc, int count) {
 		try {
 			Gate_user_table user = crud.selectGateUser(user_code);
 			if (user == null) {
 				tc.sendMessage("등록된 유저가 아닙니다.").queue();
 				return;
 			}
-			if (user.getCp_count() == 0) {
+			if (user.getCp_count() <= 0) {
 				tc.sendMessage(user_code + "씨는 오늘 남은 횟수가 없습니다!").queue();
 				return;
 			}
-			crud.updateGateCp(user.getUser_code());
+			if (user.getCp_count()-count < 0) {
+				tc.sendMessage(user_code + "씨는 오늘 "+user.getCp_count()+"타 이상으로는 한번에 입력 할수 없어요!!").queue();
+				return;
+			}
+			user.setCp_count(user.getCp_count()-count);
+			crud.updateGateCp(user);
 			tc.sendMessage("입력이 완료 되었습니다!").queue();
-			if (user.getCp_count() == 1) {
+			if (user.getCp_count() == 0) {
 				tc.sendMessage(user_code + "씨는 오늘 레이드를 모두 치셧군요! 수고하셨습니다!").queue();
 			}
 			return;
@@ -956,7 +1006,7 @@ public class TListener extends ListenerAdapter {
 		}
 	}
 
-	private void inputGateNick(String user_code, CrudProcess crud, TextChannel tc) {
+	private void inputGateNick(String user_code, CrudProcess crud, TextChannel tc,int count) {
 		try {
 			Gate_user_table user = crud.selectGateUserNick(user_code);
 			if (user == null) {
@@ -967,9 +1017,14 @@ public class TListener extends ListenerAdapter {
 				tc.sendMessage(user_code + "씨는 오늘 남은 횟수가 없습니다!").queue();
 				return;
 			}
-			crud.updateGateCp(user.getUser_code());
+			if (user.getCp_count()-count < 0) {
+				tc.sendMessage(user_code + "씨는 오늘 "+user.getCp_count()+"타 이상으로는 한번에 입력 할수 없어요!!").queue();
+				return;
+			}
+			user.setCp_count(user.getCp_count()-count);
+			crud.updateGateCp(user);
 			tc.sendMessage("입력이 완료 되었습니다!").queue();
-			if (user.getCp_count() == 1) {
+			if (user.getCp_count() == 0) {
 				tc.sendMessage(user_code + "씨는 오늘 레이드를 모두 치셧군요! 수고하셨습니다!").queue();
 			}
 			return;
@@ -996,7 +1051,7 @@ public class TListener extends ListenerAdapter {
 	}
 
 	private void serchBossCount(String user_code, CrudProcess crud, TextChannel tc) {
-		User_table user=new User_table();
+		User_table user = new User_table();
 		user.setUser_code(user_code);
 		user = crud.selectUser(user);
 		if (user == null || user.getUser_code() == null || user.getUser_code().equals("")) {
@@ -1030,7 +1085,7 @@ public class TListener extends ListenerAdapter {
 		for (Boss_count bc : bcList) {
 			if (bc.getNext_time() == null || bc.getNext_time() == 0) {
 				str += +bc.getRound() + "회차 " + bc.getNamed() + "네임드 \r\n";
-			}else {
+			} else {
 				str += +bc.getRound() + "회차 " + bc.getNamed() + "네임드 [이월] \r\n";
 			}
 		}

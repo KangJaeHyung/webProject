@@ -4,9 +4,12 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 import crud.CrudProcess;
 import model.Clan_date;
+import model.Gate_user_table;
+import model.NotParti;
 import net.dv8tion.jda.api.JDA;
 
 public class BotTimer extends Thread {
@@ -41,6 +44,24 @@ public class BotTimer extends Thread {
 
 			}
 			if (c.get(Calendar.HOUR_OF_DAY) == 0 && c.get(Calendar.MINUTE) == 0) {
+				List<Gate_user_table> list=crud.selectGateUserList();
+				String txt="";
+				int count=0;
+				for(Gate_user_table user:list) {
+					if(user.getCp_count()>0) {
+						txt=txt+user.getUser_name()+" "+user.getCp_count();
+					}
+					count+=user.getCp_count();
+				}
+				if(count<90) {
+					NotParti parti=new NotParti();
+					Date date= new Date();
+					SimpleDateFormat smpd=new SimpleDateFormat("yyyy-MM-dd");
+					String dateString = smpd.format(date);
+					parti.setParti_date(dateString);
+					parti.setNoparti(txt);
+					crud.insertNoparti(parti);
+				}
 				crud.resetGateCp();
 				Clan_date day = crud.selectDay();
 				if (day != null) {
