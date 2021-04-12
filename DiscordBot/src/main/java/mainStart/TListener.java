@@ -1,7 +1,6 @@
 package mainStart;
 
 import java.awt.Color;
-import java.io.File;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -11,10 +10,8 @@ import java.util.List;
 import crud.CrudProcess;
 import model.Boss_count;
 import model.Boss_reservation;
-import model.Character_db;
 import model.Clan_date;
 import model.Condition;
-import model.Gate_user_table;
 import model.User_table;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Guild;
@@ -29,7 +26,7 @@ public class TListener extends ListenerAdapter {
 	static int day = 0;
 	static int round;
 	static int named;
-	static int dice = 0;
+	
 
 	@Override
 	public void onMessageReceived(MessageReceivedEvent event) {
@@ -65,63 +62,6 @@ public class TListener extends ListenerAdapter {
 
 		if (spmsg[0].equals("!개발자")) {
 			tc.sendMessage("저를 만드신분은 Fuko에요.").queue();
-			return;
-		}
-		if (String.valueOf(message.charAt(0)).equals("-")) {
-			String keyword = "";
-			if (message.length() == 1) {
-				tc.sendMessage("명령어를 정확히 작성해 주세요!").queue();
-				return;
-			}
-			message = message.replaceFirst("-", "");
-			keyword = message.replace(" ", "");
-			serchChar(keyword, crud, tc);
-			return;
-		}
-		if (spmsg[0].equals("!전열")) {
-			List<Character_db> chrList = crud.selectCharLoca("전열");
-			EmbedBuilder emb = new EmbedBuilder();
-			emb.setColor(Color.yellow);
-			emb.setTitle("전열 캐릭터");
-			String str = "";
-			for (Character_db chr : chrList) {
-				str += "**" + chr.getC_name() + "** : " + chr.getC_location() + "\r\n";
-			}
-			emb.setDescription(str);
-			tc.sendMessage(emb.build()).queue();
-			return;
-		}
-		if (spmsg[0].equals("!중열")) {
-			List<Character_db> chrList = crud.selectCharLoca("중열");
-			EmbedBuilder emb = new EmbedBuilder();
-			emb.setColor(Color.yellow);
-			emb.setTitle("중열 캐릭터");
-			String str = "";
-			for (Character_db chr : chrList) {
-				str += "**" + chr.getC_name() + "** : " + chr.getC_location() + "\r\n";
-			}
-			emb.setDescription(str);
-			tc.sendMessage(emb.build()).queue();
-			return;
-		}
-		if (spmsg[0].equals("!후열")) {
-			List<Character_db> chrList = crud.selectCharLoca("후열");
-			EmbedBuilder emb = new EmbedBuilder();
-			emb.setColor(Color.yellow);
-			emb.setTitle("후열 캐릭터");
-			String str = "";
-			for (Character_db chr : chrList) {
-				str += "**" + chr.getC_name() + "** : " + chr.getC_location() + "\r\n";
-			}
-			emb.setDescription(str);
-			tc.sendMessage(emb.build()).queue();
-			return;
-		}
-
-		if (spmsg[0].equals("!위치값확인")) {
-			File file = new File("c:/image/image.png");
-			System.out.println(file.getAbsolutePath());
-			tc.sendFile(file, "image.jpg").queue();
 			return;
 		}
 		if (spmsg[0].equals("!안녕")) {
@@ -160,48 +100,16 @@ public class TListener extends ListenerAdapter {
 			return;
 		}
 		if (spmsg[0].equals("!주사위")) {
-			if (user.getAsMention().equals("<@363657198347485186>")) {
-				int rnd = (int) (Math.random() * (101 - dice)) + dice;
-				tc.sendMessage("와!" + user.getAsMention() + "씨의 주사위는 " + rnd + "에요.").queue();
-				return;
-			} else {
 				int rnd = (int) (Math.random() * 101);
 				tc.sendMessage("와!" + user.getAsMention() + "씨의 주사위는 " + rnd + "에요.").queue();
-				dice=rnd;
 				return;
-			}
-		}
 
+		}
 		// 전국리마협회 가테지부
 
 		// 아카리뿌
 		if (guild.getId().equals("600296449603010563")) {
-			if (spmsg[0].equals("!명령어")) {
-				EmbedBuilder emb = new EmbedBuilder();
-				emb.setColor(Color.yellow);
-				emb.setTitle("명령어 모음");
-				emb.addField("!주사위", "0~100까지 숫자중 랜덤으로 하나 출력", false);
-				emb.addField("!유저등록 [자신의 닉네임]", "자신을 DB에 등록합니다.", false);
-				emb.addField("!계산1 [보스체력] [데미지]", "이월 시간 계산", false);
-				emb.addField("!계산2 [자신이넣은딜량]", "풀이월받으려면 남아있는 보스의 hp", false);
-				emb.addField("!계산3 [보스의남은hp]", "풀이월받으려면 넣어야할 딜량", false);
-				emb.addField("!cp확인", "오늘 남은 cp를 보여드립니다.", false);
-				emb.addField("!확인 [@맨션]", "오늘 자신이 친 이력확인 뒤에 맨션 붙일시 그사람 확인", false);
-				emb.addField("!확인", "현재 이월자 확인", false);
-				emb.addField("!호출 [회차][네임드]", "해당 회차 네임드를 예약한 유저를 호출합니다", false);
-				emb.addField("!예약확인 [회차] [네임드]", "회차랑 네임드 안적을시 모든 예약 정보가 나옵니다.", false);
-				emb.addField("!예약 [회차] [네임드] [예상데미지] [이월]", "회차랑 네임드는 필수로 적고 데미지랑 이월은 필수가 아닙니다.", false);
-				emb.addField("!예약취소 [회차] [네임드]", "해당회차 예약 취소. 회차랑 네임드 적지 않을시 전체취소", false);
-				emb.addField("===3타완료보고서에 써주세요.===", "", false);
-				emb.addField("!입력 [회차] [네임드] [이월시간]", "자신이 해당 회차 네임드에 넣은 딜량을 DB에 입력합니다. 마무리 했을 경우 이월시간을 입력하면 됩니다.",
-						false);
-				emb.addField("!대리입력 [유저맨션] [회차] [네임드] [이월시간]",
-						"해당 유저의 회차 네임드에 넣은 딜량을 DB에 입력합니다. 마무리 했을 경우 이월시간을 입력하면 됩니다.", false);
-				emb.addField("!전체삭제", "오늘 자신이 넣은 데미지 전체를 삭제합니다.", false);
-				emb.addField("!최근삭제", "방금 자신이 입력한 데미지를 삭제합니다.", false);
-				tc.sendMessage(emb.build()).queue();
-				return;
-			}
+			
 
 			if (spmsg[0].equals("!계산1")) {
 				if (spmsg.length < 3) {
@@ -324,22 +232,6 @@ public class TListener extends ListenerAdapter {
 				tc.sendMessage(emb.build()).queue();
 				return;
 			}
-//			if (spmsg[0].equals("!오늘전체딜량")) {
-//				serchTodayDamage(crud, tc);
-//				return;
-//			}
-//			if (spmsg[0].equals("!이번달딜량")) {
-//				if (spmsg.length == 1) {
-//					serchMonthDamge(user.getAsMention(), crud, tc);
-//				} else {
-//					if (spmsg[1].equals("상세"))
-//						serchMonthDamgeAll(user.getAsMention(), crud, tc);
-//					else
-//						tc.sendMessage("명령어가 잘못됬어요! \r\n ex)!이번달딜량 상세").queue();
-//					;
-//				}
-//				return;
-//			}
 			if (spmsg[0].equals("!예약")) {
 				Integer damage = -1;
 				Integer round = 0;
@@ -625,8 +517,17 @@ public class TListener extends ListenerAdapter {
 
 			}
 
-			if (tc.getName().equals("커맨드") && user.getAsMention().equals("<@363657198347485186>")) {
-
+			if (tc.getName().equals("커맨드")/* && user.getAsMention().equals("<@363657198347485186>")*/) {
+				if (spmsg[0].equals("!명령어")) {
+					EmbedBuilder emb = new EmbedBuilder();
+					emb.setColor(Color.yellow);
+					emb.setTitle("커맨드 명령어 모음");
+					emb.addField("!날짜지정 yyyy-mm-dd yyyy-mm-dd", "클랜 날짜지정 앞에는 시작 날짜 뒤에는 종료날짜+1", false);
+					emb.addField("!날짜삭제", "등록한 날짜 삭제", false);
+					emb.addField("!유저추방 [유저명]", "닉네임 입니다 맨션아닙니다.", false);
+					tc.sendMessage(emb.build()).queue();
+					return;
+				}
 				if (spmsg[0].equals("!날짜지정")) {
 					if (spmsg.length < 3) {
 						tc.sendMessage("잘못된 형식입니다.").queue();
@@ -656,22 +557,11 @@ public class TListener extends ListenerAdapter {
 					crud.insertClanDate(cd);
 					tc.sendMessage("등록되었습니다. " + day).queue();
 				}
-
 				if (spmsg[0].equals("!날짜삭제")) {
 
 					crud.deleteClanDate();
+					day=0;
 					tc.sendMessage("삭제되었습니다.").queue();
-				}
-
-				if (spmsg[0].equals("!cp초기화")) {
-					crud.resetCp();
-					tc.sendMessage("하으으.. 초기화 되었어요!!").queue();
-					return;
-				}
-				if (spmsg[0].equals("!유저초기화")) {
-					crud.resetUser();
-					tc.sendMessage("하으으.. 초기화 되었어요!!").queue();
-					return;
 				}
 				if (spmsg[0].equals("!유저추방")) {
 					if (spmsg.length != 2) {
@@ -684,241 +574,38 @@ public class TListener extends ListenerAdapter {
 					return;
 				}
 
-			}
-		} else if (guild.getId().equals("744212280262262864")) {
-			// 가테지부
-			// 가테지부
-			// 가테지부
-			// 가테지부
-			// 가테지부
-			// 가테지부
-			// 가테지부
-			// 가테지부
-			// 가테지부
-			// 가테지부
-			// 가테지부
-			if (message.equals("!명령어")) {
-				EmbedBuilder emb = new EmbedBuilder();
-				emb.setColor(Color.yellow);
-				emb.setTitle("명령어 모음");
-				emb.addField("!주사위", "0~100까지 숫자중 랜덤으로 하나 출력", false);
-				emb.addField("!입력", "레이드를 치셨으면 이 명령어를 사용하면 친 횟수가 1회 감소합니다.", false);
-				emb.addField("!cp", "오늘 남은 cp를 보여드립니다.", false);
-				emb.addField("!유저등록 [@맨션] [닉네임]", "해당유저를 DB에 저장", false);
-//				emb.addField("!닉네임변경 [@맨션] [변경할닉네임]", "해당유저의 닉네임을 변경합니다.", false);
-//				emb.addField("!유저탈퇴 [닉네임]", "해당유저를 DB에서삭제", false);
-				emb.addField("!유저목록", "DB에 등록된 유저목록을 불러옵니다.", false);
-				emb.addField("!대리입력 [@맨션 or 닉네임]", "해당 유저분이 레이드를 치셨으면 이 명령어를 사용하면 해당 유저 친 횟수가 1회 감소합니다.", false);
-				tc.sendMessage(emb.build()).queue();
-				return;
-			}
-			if (spmsg[0].equals("!유저등록")) {
-				if (spmsg.length == 3) {
-					if (spmsg[1].charAt(0) != '<' || spmsg[1].charAt(spmsg[1].length() - 1) != '>') {
-						tc.sendMessage("명령어가 잘못되었습니다. ex)!유저등록 @푸코 푸코").queue();
-						return;
-					} else {
-						if (spmsg[2].length() >= 15) {
-							tc.sendMessage("닉네임이 너무긴거같아요!").queue();
-							return;
-						}
-						Gate_user_table gt = new Gate_user_table();
-						spmsg[1] = spmsg[1].replace("!", "");
-						gt.setCp_count(3);
-						gt.setUser_code(spmsg[1]);
-						gt.setUser_name(spmsg[2]);
-						try {
-							crud.insertGateUser(gt);
-						} catch (Exception e) {
-							tc.sendMessage("이미 등록된 유저입니다.").queue();
-							return;
-						}
-						tc.sendMessage(spmsg[1] + "님 DB에 등록되었어요!").queue();
-					}
-				} else {
-					tc.sendMessage("명령어가 잘못되었습니다. ex)!유저등록 @푸코 푸코").queue();
-
-				}
-				return;
-			}
-			if (spmsg[0].equals("!유저탈퇴")) {
-				if (spmsg.length == 2) {
-					crud.deleteGateUser(spmsg[1]);
-					tc.sendMessage(spmsg[1] + "님을 DB에서 삭제했어요!").queue();
-				} else {
-					tc.sendMessage("명령어가 잘못되었습니다. ex)!유저탈퇴 푸코").queue();
-
-				}
-				return;
-			}
-			if (spmsg[0].equals("!닉네임변경")) {
-				if (spmsg.length == 3) {
-					if (spmsg[1].charAt(0) != '<' || spmsg[1].charAt(spmsg[1].length() - 1) != '>') {
-						tc.sendMessage("명령어가 잘못되었습니다. ex)!닉네임변경  @푸코 푸코").queue();
-						return;
-					} else {
-						if (spmsg[2].length() >= 15) {
-							tc.sendMessage("닉네임이 너무긴거같아요!").queue();
-							return;
-						}
-						Gate_user_table gt = new Gate_user_table();
-						spmsg[1] = spmsg[1].replace("!", "");
-						gt.setCp_count(3);
-						gt.setUser_code(spmsg[1]);
-						gt.setUser_name(spmsg[2]);
-						crud.updateGateUser(gt);
-						tc.sendMessage(spmsg[1] + "님 닉네임을 변경했습니다!").queue();
-					}
-				} else {
-					tc.sendMessage("명령어가 잘못되었습니다. ex)!닉네임변경 @푸코 fuko").queue();
-
-				}
-				return;
-			}
-
-			if (spmsg[0].equals("!유저목록")) {
-				List<Gate_user_table> userList = crud.selectGateUserList();
-				String user_name = "";
-				for (Gate_user_table userL : userList) {
-					user_name = user_name + userL.getUser_name() + "\r\n";
-				}
-				user_name += "총 " + userList.size() + "명";
-				tc.sendMessage("===へんたい不審者さんたち===").queue();
-				tc.sendMessage(user_name).queue();
-				return;
-			}
-
-			if (spmsg[0].equals("!cp") || spmsg[0].equals("!CP")) {
-				List<Gate_user_table> userList = crud.selectGateUserList();
-				EmbedBuilder emb = new EmbedBuilder();
-				emb.setTitle("현재 남은 cp");
-				emb.setColor(Color.yellow);
-				Integer cp = 0;
-				for (Gate_user_table us : userList) {
-					if (us.getCp_count() != 0) {
-						emb.addField(us.getUser_name(), us.getCp_count() + "번", true);
-						cp += us.getCp_count();
-					}
-				}
-				emb.setFooter("총 " + cp + "번 남았습니다.", null);
-				tc.sendMessage(emb.build()).queue();
-				return;
-			}
-			if (spmsg[0].equals("!입력")) {
-				try {
-					if (spmsg.length == 1) {
-						inputGate(user.getAsMention(), crud, tc, 1);
-					} else {
-						inputGate(user.getAsMention(), crud, tc, Integer.parseInt(spmsg[1]));
-					}
-				} catch (NumberFormatException e) {
-					tc.sendMessage("오류가 발생했어요 다시 입력해주세요.").queue();
+			}else {
+				if (spmsg[0].equals("!명령어")) {
+					EmbedBuilder emb = new EmbedBuilder();
+					emb.setColor(Color.yellow);
+					emb.setTitle("명령어 모음");
+					emb.addField("!주사위", "0~100까지 숫자중 랜덤으로 하나 출력", false);
+					emb.addField("!유저등록 [자신의 닉네임]", "자신을 DB에 등록합니다.", false);
+					emb.addField("!계산1 [보스체력] [데미지]", "이월 시간 계산", false);
+					emb.addField("!계산2 [자신이넣은딜량]", "풀이월받으려면 남아있는 보스의 hp", false);
+					emb.addField("!계산3 [보스의남은hp]", "풀이월받으려면 넣어야할 딜량", false);
+					emb.addField("!cp확인", "오늘 남은 cp를 보여드립니다.", false);
+					emb.addField("!확인 [@맨션]", "오늘 자신이 친 이력확인 뒤에 맨션 붙일시 그사람 확인", false);
+					emb.addField("!확인", "현재 이월자 확인", false);
+					emb.addField("!호출 [회차][네임드]", "해당 회차 네임드를 예약한 유저를 호출합니다", false);
+					emb.addField("!예약확인 [회차] [네임드]", "회차랑 네임드 안적을시 모든 예약 정보가 나옵니다.", false);
+					emb.addField("!예약 [회차] [네임드] [예상데미지] [이월]", "회차랑 네임드는 필수로 적고 데미지랑 이월은 필수가 아닙니다.", false);
+					emb.addField("!예약취소 [회차] [네임드]", "해당회차 예약 취소. 회차랑 네임드 적지 않을시 전체취소", false);
+					emb.addField("===3타완료보고서에 써주세요.===", "", false);
+					emb.addField("!입력 [회차] [네임드] [이월시간]", "자신이 해당 회차 네임드에 넣은 딜량을 DB에 입력합니다. 마무리 했을 경우 이월시간을 입력하면 됩니다.",
+							false);
+					emb.addField("!대리입력 [유저맨션] [회차] [네임드] [이월시간]",
+							"해당 유저의 회차 네임드에 넣은 딜량을 DB에 입력합니다. 마무리 했을 경우 이월시간을 입력하면 됩니다.", false);
+					emb.addField("!전체삭제", "오늘 자신이 넣은 데미지 전체를 삭제합니다.", false);
+					emb.addField("!최근삭제", "방금 자신이 입력한 데미지를 삭제합니다.", false);
+					tc.sendMessage(emb.build()).queue();
+					return;
 				}
 			}
-			if (spmsg[0].equals("!대리입력")) {
-				try {
-					if (spmsg.length == 2) {
-						if (spmsg[1].charAt(0) == '<' && spmsg[1].charAt(spmsg[1].length() - 1) == '>') {
-							inputGate(spmsg[1].replace("!", ""), crud, tc, 0);
-						} else {
-							inputGateNick(spmsg[1], crud, tc, 1);
-						}
-					} else if (spmsg.length == 3) {
-						if (spmsg[1].charAt(0) == '<' && spmsg[1].charAt(spmsg[1].length() - 1) == '>') {
-
-							inputGate(spmsg[1].replace("!", ""), crud, tc, Integer.parseInt(spmsg[2]));
-						} else {
-							inputGateNick(spmsg[1], crud, tc, Integer.parseInt(spmsg[2]));
-						}
-					}
-				} catch (NumberFormatException e) {
-					tc.sendMessage("오류가 발생했어요 다시 입력해주세요.").queue();
-				}
-			}
-
-		} else {
-			if (message.equals("!명령어")) {
-				EmbedBuilder emb = new EmbedBuilder();
-				emb.setColor(Color.yellow);
-				emb.setTitle("명령어 모음");
-				emb.addField("!주사위", "0~100까지 숫자중 랜덤으로 하나 출력", false);
-				emb.addField("!전열or중열or후열", "해당 포지션의 캐릭터들을 보여줍니다.", false);
-				emb.addField("-캐릭터키워드", "해당캐릭터의 정보를 보여줍니다 ex)-페코린느,ex)-마망", false);
-				tc.sendMessage(emb.build()).queue();
-				return;
-			}
-		}
-
+		} 
 	}
 
-	private void serchChar(String keyword, CrudProcess crud, TextChannel tc) {
-		try {
-			Character_db chr = crud.selectChar("%" + keyword + "%");
-			EmbedBuilder emb = new EmbedBuilder();
-			String rare = "";
-			if (chr.getC_rare() == 1) {
-				rare = "★";
-			} else if (chr.getC_rare() == 2) {
-				rare = "★★";
-			} else if (chr.getC_rare() == 3) {
-				rare = "★★★";
-			}
-			String[] ub = chr.getC_ub().split(":");
-			String[] skill1 = chr.getC_skill1().split(":");
-			String[] skill2 = chr.getC_skill2().split(":");
-			String[] exSkill = chr.getC_exSkill().split(":");
-			String[] equ = chr.getC_equipment().split(":");
-			String[] rare6 = chr.getC_rare6().split(":");
-			equ[2] = equ[2].replace("\\r\\n", "\r\n");
-			ub[1] = ub[1].replace("\\r\\n", "\r\n");
-			skill1[1] = skill1[1].replace("\\r\\n", "\r\n");
-			skill2[1] = skill2[1].replace("\\r\\n", "\r\n");
-			rare6[1] = rare6[1].replace("\\r\\n", "\r\n");
-			exSkill[1] = exSkill[1].replace("\\r\\n", "\r\n");
-			emb.setTitle(chr.getC_name());
-			emb.setColor(Color.yellow);
-			String height = "";
-			String weight = "";
-			String age = "";
-			if (chr.getC_height() == 999) {
-				height = "알수없음";
-			} else {
-				height = chr.getC_height() + "cm";
-			}
-			if (chr.getC_weight() == 999) {
-				weight = "알수없음";
-			} else {
-				weight = chr.getC_weight() + "kg";
-			}
-			if (chr.getC_age() == 999) {
-				age = "알수없음";
-			} else {
-				age = chr.getC_age() + "살";
-			}
-			emb.addField("**`신장`**", height, true);
-			emb.addField("**`체중`**", weight, true);
-			emb.addField("**`나이`**", age, true);
-			emb.addField("**`생일`**", chr.getC_birthday(), true);
-			emb.addField("**`길드`**", chr.getC_guild(), true);
-			emb.addField("**`성우`**", chr.getC_voice(), true);
-			emb.addField("**`포지션`**", chr.getC_position() + "(" + chr.getC_location() + ")", true);
-			emb.addField("**`초기레어도`**", rare, true);
-			emb.addField("**`UB`**:" + ub[0], ub[1], false);
-			emb.addField("**`1스킬`**:" + skill1[0], skill1[1], false);
-			emb.addField("**`2스킬`**:" + skill2[0], skill2[1], false);
-			emb.addField("**`EX스킬`**:" + exSkill[0], exSkill[1], false);
-			emb.addField("**`전용장비`**:" + equ[0] + "(" + equ[1] + ")", equ[2], false);
-			emb.addField("**`6성`**:" + rare6[0], rare6[1], false);
-			emb.setImage(chr.getC_image());
-			emb.setThumbnail(chr.getC_sub_image());
-			tc.sendMessage(emb.build()).queue();
-		} catch (NullPointerException e) {
-
-		} catch (Exception e) {
-			e.printStackTrace();
-			tc.sendMessage("오류가 낫나봐요. 다시 시도해주세요.").queue();
-		}
-	}
+	
 
 	private void callReserv(TextChannel tc, CrudProcess crud, Boss_reservation br) {
 		List<Boss_reservation> brList = crud.selectBossReservAll(br);
@@ -975,67 +662,7 @@ public class TListener extends ListenerAdapter {
 		tc.sendMessage(str).queue();
 	}
 
-	private void inputGate(String user_code, CrudProcess crud, TextChannel tc, int count) {
-		try {
-			Gate_user_table user = crud.selectGateUser(user_code);
-			if (user == null) {
-				tc.sendMessage("등록된 유저가 아닙니다.").queue();
-				return;
-			}
-			if (user.getCp_count() <= 0) {
-				tc.sendMessage(user_code + "씨는 오늘 남은 횟수가 없습니다!").queue();
-				return;
-			}
-			if (user.getCp_count()-count < 0) {
-				tc.sendMessage(user_code + "씨는 오늘 "+user.getCp_count()+"타 이상으로는 한번에 입력 할수 없어요!!").queue();
-				return;
-			}
-			user.setCp_count(user.getCp_count()-count);
-			crud.updateGateCp(user);
-			tc.sendMessage("입력이 완료 되었습니다!").queue();
-			if (user.getCp_count() == 0) {
-				tc.sendMessage(user_code + "씨는 오늘 레이드를 모두 치셧군요! 수고하셨습니다!").queue();
-			}
-			return;
-		} catch (NullPointerException e) {
-			tc.sendMessage("등록된 유저가 아닙니다.").queue();
-			return;
-		} catch (Exception e) {
-			tc.sendMessage("뭔가 문제가 생긴거 같아요! 관리자에게 문의 주세요!").queue();
-			return;
-		}
-	}
 
-	private void inputGateNick(String user_code, CrudProcess crud, TextChannel tc,int count) {
-		try {
-			Gate_user_table user = crud.selectGateUserNick(user_code);
-			if (user == null) {
-				tc.sendMessage("등록된 유저가 아닙니다.").queue();
-				return;
-			}
-			if (user.getCp_count() == 0) {
-				tc.sendMessage(user_code + "씨는 오늘 남은 횟수가 없습니다!").queue();
-				return;
-			}
-			if (user.getCp_count()-count < 0) {
-				tc.sendMessage(user_code + "씨는 오늘 "+user.getCp_count()+"타 이상으로는 한번에 입력 할수 없어요!!").queue();
-				return;
-			}
-			user.setCp_count(user.getCp_count()-count);
-			crud.updateGateCp(user);
-			tc.sendMessage("입력이 완료 되었습니다!").queue();
-			if (user.getCp_count() == 0) {
-				tc.sendMessage(user_code + "씨는 오늘 레이드를 모두 치셧군요! 수고하셨습니다!").queue();
-			}
-			return;
-		} catch (NullPointerException e) {
-			tc.sendMessage("등록된 유저가 아닙니다.").queue();
-			return;
-		} catch (Exception e) {
-			tc.sendMessage("뭔가 문제가 생긴거 같아요! 관리자에게 문의 주세요!").queue();
-			return;
-		}
-	}
 
 	private void reservation(Boss_reservation br, CrudProcess crud, TextChannel tc, String user_code) {
 		Date date = new Date();

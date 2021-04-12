@@ -10,11 +10,8 @@ import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 
 import model.Boss_count;
 import model.Boss_reservation;
-import model.Character_db;
 import model.Clan_date;
 import model.Condition;
-import model.Gate_user_table;
-import model.NotParti;
 import model.User_boss_count;
 import model.User_table;
 
@@ -32,41 +29,11 @@ public class CrudProcess {
 			ss.close();
 		}
 	}
-	public List<Gate_user_table> selectGateUserList() {
-		SqlSession ss = getSession();
-		List<Gate_user_table> cs = null;
-		try {
-			String query = NAMESPACE + ".selectGateUserList";
-			cs = ss.selectList(query);
-			return cs;
-		} finally {
-			ss.close();
-		}
-	}
-	
-	public List<Character_db> selectCharLoca(String location){
-		SqlSession ss = getSession();
-		List<Character_db> cs = null;
-		try {
-			String query = NAMESPACE + ".selectCharLoca";
-			cs = ss.selectList(query,location);
-			return cs;
-		} finally {
-			ss.close();
-		}
-	}
-	public List<Character_db> selectCharAll(){
-		SqlSession ss = getSession();
-		List<Character_db> cs = null;
-		try {
-			String query = NAMESPACE + ".selectCharAll";
-			cs = ss.selectList(query);
-			return cs;
-		} finally {
-			ss.close();
-		}
-	}
-	
+
+
+
+
+
 	public Clan_date selectDay() {
 		SqlSession ss = getSession();
 		Clan_date cs = null;
@@ -91,29 +58,6 @@ public class CrudProcess {
 		}
 	}
 
-	public Gate_user_table selectGateUser(String user_code) {
-		SqlSession ss = getSession();
-		Gate_user_table cs = null;
-		try {
-			String query = NAMESPACE + ".selectGateUser";
-			cs = ss.selectOne(query, user_code);
-			return cs;
-		} finally {
-			ss.close();
-		}
-	}
-	
-	public Gate_user_table selectGateUserNick(String user_name) {
-		SqlSession ss = getSession();
-		Gate_user_table cs = null;
-		try {
-			String query = NAMESPACE + ".selectGateUserNick";
-			cs = ss.selectOne(query, user_name);
-			return cs;
-		} finally {
-			ss.close();
-		}
-	}
 	public User_table selectUser(User_table user) {
 		SqlSession ss = getSession();
 		User_table cs = null;
@@ -173,17 +117,8 @@ public class CrudProcess {
 			ss.close();
 		}
 	}
-	public Character_db selectChar(String keyword) {
-		SqlSession ss = getSession();
-		Character_db cs = null;
-		try {
-			String query = NAMESPACE + ".selectChar";
-			cs = ss.selectOne(query, keyword);
-			return cs;
-		} finally {
-			ss.close();
-		}
-	}
+
+	
 	public Boss_count selectRN() {
 		SqlSession ss = getSession();
 		Boss_count cs = null;
@@ -195,7 +130,6 @@ public class CrudProcess {
 			ss.close();
 		}
 	}
-	
 
 	public Integer insertReserv(Boss_reservation br) {
 		SqlSession ss = getSession();
@@ -230,23 +164,6 @@ public class CrudProcess {
 		}
 		return str;
 	}
-	public String insertGateUser(Gate_user_table userT) {
-		SqlSession ss = getSession();
-		String str = "실패";
-		try {
-			String query = NAMESPACE + ".insertGateUser";
-			Integer cs = ss.insert(query, userT);
-			if (cs > 0) {
-				str = "성공";
-				ss.commit();
-			}
-		} catch (Exception e) {
-			str = "실패";
-		} finally {
-			ss.close();
-		}
-		return str;
-	}
 
 	public Integer insertBossDamage(Boss_count boss_count) {
 		SqlSession ss = getSession();
@@ -263,7 +180,7 @@ public class CrudProcess {
 		}
 		return cs;
 	}
-	
+
 	public Integer insertClanDate(Clan_date cd) {
 		SqlSession ss = getSession();
 		Integer cs = 0;
@@ -280,25 +197,8 @@ public class CrudProcess {
 		}
 		return cs;
 	}
-	
-	public Integer insertNoparti(NotParti cd) {
-		SqlSession ss = getSession();
-		Integer cs = 0;
-		try {
-			String query = NAMESPACE + ".insertNoparti";
-			cs = ss.insert(query, cd);
-			if (cs > 0) {
-				ss.commit();
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			ss.close();
-		}
-		return cs;
-	}
-	
-	
+
+
 	public Integer deleteClanDate() {
 		SqlSession ss = getSession();
 		Integer cs = 0;
@@ -314,7 +214,7 @@ public class CrudProcess {
 		}
 		return cs;
 	}
-	
+
 	public Integer resetCpUser(String user_code) {
 		SqlSession ss = getSession();
 		Integer cs = 0;
@@ -330,7 +230,7 @@ public class CrudProcess {
 		}
 		return cs;
 	}
-	
+
 	public Integer addCpUser(String user_code) {
 		SqlSession ss = getSession();
 		Integer cs = 0;
@@ -346,9 +246,6 @@ public class CrudProcess {
 		}
 		return cs;
 	}
-	
-	
-	
 
 	public Integer resetBr() {
 		SqlSession ss = getSession();
@@ -396,7 +293,7 @@ public class CrudProcess {
 		}
 		return cs;
 	}
-	
+
 	public Integer deleteGateUser(String user_name) {
 		SqlSession ss = getSession();
 		Integer cs = 0;
@@ -428,7 +325,8 @@ public class CrudProcess {
 		}
 		return cs;
 	}
-	public Integer deleteDate(){
+
+	public Integer deleteDate() {
 		SqlSession ss = getSession();
 		Integer cs = 0;
 		try {
@@ -443,7 +341,7 @@ public class CrudProcess {
 		}
 		return cs;
 	}
-	
+
 	public Integer deleteDamgeOne(Condition c) {
 		SqlSession ss = getSession();
 		Integer cs = 0;
@@ -459,7 +357,7 @@ public class CrudProcess {
 		}
 		return cs;
 	}
-	
+
 	public Integer deleteBossReservAll(String user_code) {
 		SqlSession ss = getSession();
 		Integer cs = 0;
@@ -475,7 +373,7 @@ public class CrudProcess {
 		}
 		return cs;
 	}
-	
+
 	public Integer deleteBossReserv(Boss_reservation br) {
 		SqlSession ss = getSession();
 		Integer cs = 0;
@@ -492,23 +390,6 @@ public class CrudProcess {
 		return cs;
 	}
 
-	public Integer updateGateCp(Gate_user_table user) {
-		SqlSession ss = getSession();
-		Integer cs = 0;
-		try {
-			String query = NAMESPACE + ".updateGateCp";
-			cs = ss.update(query, user);
-			if (cs > 0) {
-				ss.commit();
-			}
-		} catch (Exception e) {
-		} finally {
-			ss.close();
-		}
-		return cs;
-	}
-	
-	
 	public Integer updateUserCarryCount(User_table carry_time) {
 		SqlSession ss = getSession();
 		Integer cs = 0;
@@ -524,7 +405,7 @@ public class CrudProcess {
 		}
 		return cs;
 	}
-	
+
 	public Integer updateCount(String user) {
 		SqlSession ss = getSession();
 		Integer cs = 0;
@@ -540,6 +421,7 @@ public class CrudProcess {
 		}
 		return cs;
 	}
+
 	public Integer updateDay() {
 		SqlSession ss = getSession();
 		Integer cs = 0;
@@ -555,23 +437,7 @@ public class CrudProcess {
 		}
 		return cs;
 	}
-	
-	public Integer updateGateUser(Gate_user_table user) {
-		SqlSession ss = getSession();
-		Integer cs = 0;
-		try {
-			String query = NAMESPACE + ".updateGateUser";
-			cs = ss.update(query,user);
-			if (cs > 0) {
-				ss.commit();
-			}
-		} catch (Exception e) {
-		} finally {
-			ss.close();
-		}
-		return cs;
-	}
-	
+
 	public Integer resetGateCp() {
 		SqlSession ss = getSession();
 		Integer cs = 0;
@@ -587,7 +453,6 @@ public class CrudProcess {
 		}
 		return cs;
 	}
-	
 
 	public Integer resetCp() {
 		SqlSession ss = getSession();
@@ -604,6 +469,7 @@ public class CrudProcess {
 		}
 		return cs;
 	}
+
 	public Integer resetDmg() {
 		SqlSession ss = getSession();
 		Integer cs = 0;
@@ -619,7 +485,6 @@ public class CrudProcess {
 		}
 		return cs;
 	}
-	
 
 	private SqlSession getSession() {
 		String path = "crud/Mybatics.xml";

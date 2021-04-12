@@ -24,10 +24,10 @@ public class Main {
 //		jb.addEventListeners(new TListener());
 //		jb.setStatus(OnlineStatus.ONLINE);
 		try {
-			jda = JDABuilder.create("NjkzODQyMDE0MTI2NDczMjM3",//nUic48pVYIzfgDu5EywsLVSCi0o//.XoC8uw.
-					GatewayIntent.GUILD_MESSAGES, GatewayIntent.GUILD_MEMBERS).setActivity(Activity.of(ActivityType.DEFAULT, "귀여운 막둥이 일")).build();//
+			jda = JDABuilder.create("NjkzODQyMDE0MTI2NDczMjM3.XoC8uw.nUic48pVYIzfgDu5EywsLVSCi0o", // nUic48pVYIzfgDu5EywsLVSCi0o//
+					GatewayIntent.GUILD_MESSAGES, GatewayIntent.GUILD_MEMBERS)
+					.setActivity(Activity.of(ActivityType.DEFAULT, "귀여운 막둥이 일")).build();//
 			jda.addEventListener(new TListener());
-			List<Guild> glist = jda.getGuilds();
 			BotTimer timer = new BotTimer(jda);
 			timer.start();
 			CrudProcess crud = new CrudProcess();
@@ -35,7 +35,7 @@ public class Main {
 			if (date != null) {
 				TListener.day = date.getDay();
 				Boss_count bs = crud.selectRN();
-				System.out.println(TListener.day);
+				System.out.println("클랜전 "+ TListener.day+"일차");
 			} else {
 				TListener.day = 0;
 			}

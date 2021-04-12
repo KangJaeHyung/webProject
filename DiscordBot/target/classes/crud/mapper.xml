@@ -8,11 +8,7 @@
 		#{user_code},#{user_name} ,#{cp_count},0,0,0
 		)
 	</insert>
-	<insert id="insertGateUser" parameterType="model.Gate_user_table">
-		insert into gate_user_table values(
-		#{user_code},#{user_name} ,#{cp_count}
-		)
-	</insert>
+
 	
 	<insert id="insertBossDamage" parameterType="model.Boss_count">
 		insert into boss_count values(
@@ -29,11 +25,7 @@
 		#{day},#{start_day},#{end_day}
 		)
 	</insert>
-	<insert id="insertNoparti" parameterType="model.NotParti">
-		insert into notparti values(
-			#{parti_date},#{noparti}
-		)
-	</insert>
+
 
 	
 
@@ -43,21 +35,12 @@
 	<select id="selectUserList" resultType="model.User_table">
 		select * from user_table
 	</select>
-	<select id="selectGateUserList" resultType="model.Gate_user_table">
-		select * from gate_user_table
-	</select>
+
 	<select id="selectUser" parameterType="model.User_table"
 		resultType="model.User_table">
 		select * from user_table where user_code=#{user_code}
 	</select>
-	<select id="selectGateUser" parameterType="String"
-		resultType="model.Gate_user_table">
-		select * from gate_user_table where user_code=#{user_code}
-	</select>
-	<select id="selectGateUserNick" parameterType="String"
-		resultType="model.Gate_user_table">
-		select * from gate_user_table where user_name=#{user_name}
-	</select>
+
 	
 	
 	
@@ -142,15 +125,8 @@
 		carry=0
 		where user_code=#{user}
 	</update>
-		<update id="updateGateUser" parameterType="model.Gate_user_table">
-		update gate_user_table set user_name=#{user_name} where user_code=#{user_code}
-	</update>
-	<update id="updateGateCp" parameterType="model.Gate_user_table">
-		update gate_user_table set cp_count=#{cp_count} where user_code=#{user_code}
-	</update>
-	<update id="resetGateCp">
-		update gate_user_table set cp_count=3
-	</update>
+
+
 	<update id="resetCp">
 		update user_table set cp_count=3
 	</update>
@@ -198,9 +174,7 @@
 		delete from user_table where user_name=#{user_name}
 	</delete>
 	
-	<delete id="deleteGateUser" parameterType="String">
-		delete from Gate_user_table where user_name=#{user_name}
-	</delete>
+
 	<delete id="deleteBossReserv"
 		parameterType="model.Boss_reservation">
 		delete from boss_reservation
